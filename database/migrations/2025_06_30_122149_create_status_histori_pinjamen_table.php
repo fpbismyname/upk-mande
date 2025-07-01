@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('status_histori_pinjamen', function (Blueprint $table) {
-            $table->uuid('id_histori_pinjaman')->primary();
+        Schema::create('status_histori_pinjaman', function (Blueprint $table) {
+            $table->uuid('id')->primary();
             $table->decimal('jumlah_pinjaman', 11, 2);
-            $table->enum('status', ['diproses', 'disetujui', 'dicairkan', 'lunal', 'dibatalkan']);
+            $table->enum('status', ['diproses', 'disetujui', 'dicairkan', 'lunas', 'dibatalkan']);
             $table->text('catatan')->nullable();
-            $table->foreignUuid('pinjaman_id')->nullable()->constrained('pinjaman', 'id_pinjaman')->onDelete('cascade');
-            $table->foreignUuid('grup_id')->nullable()->constrained('grup', 'id_grup')->onDelete('cascade');
+            $table->foreignUuid('pinjaman_id')->nullable()->constrained('pinjaman', 'id')->onDelete('cascade');
+            $table->foreignUuid('grup_id')->nullable()->constrained('grup', 'id')->onDelete('cascade');
             $table->timestamps();
         });
     }

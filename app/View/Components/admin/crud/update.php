@@ -1,12 +1,12 @@
 <?php
 
-namespace App\View\Components\admin\transaksi;
+namespace App\View\Components\admin\crud;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class pencairan extends Component
+class update extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class pencairan extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.admin.transaksi.pencairan');
+        return view('components.admin.crud.update');
     }
 }

@@ -10,6 +10,10 @@ class StatusHistoriPinjaman extends Model
 
     use HasFactory;
     protected $table = 'status_historio_pinjaman';
+
+    // Primary key and key type
+    protected $primaryKey = 'id';
+    public $incrementing = false;
     protected $keyType = 'string';
 
 
@@ -17,6 +21,6 @@ class StatusHistoriPinjaman extends Model
 
     protected function pinjaman()
     {
-        return $this->belongsTo(Pinjaman::class);
+        return $this->belongsTo(Pinjaman::class, 'pinjaman_id', 'id');
     }
 }

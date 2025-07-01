@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cicilan_pinjaman', function (Blueprint $table) {
-            $table->uuid('id_cicilan')->primary();
+            $table->uuid('id')->primary();
             $table->decimal('jumlah_cicilan', 11, 2);
             $table->dateTime('jatuh_tempo');
             $table->enum('status', ['dibayar', 'belum dibayar']);
-            $table->foreignUuid('grup_id')->nullable()->constrained('grup', 'id_grup')->onDelete('cascade');
+            $table->foreignUuid('grup_id')->nullable()->constrained('grup', 'id')->onDelete('cascade');
             $table->timestamps();
         });
     }

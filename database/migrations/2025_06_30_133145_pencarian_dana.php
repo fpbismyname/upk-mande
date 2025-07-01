@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pencairan_dana', function (Blueprint $table) {
-            $table->uuid('id_pencairan')->primary();
+            $table->uuid('id')->primary();
             $table->dateTime('tanggal_pencairan');
             $table->decimal('jumlah_pencairan', 11, 2);
             $table->text('keterangan');
-            $table->foreignUuid('pinjaman_id')->nullable()->constrained('pinjaman', 'id_pinjaman')->onDelete('cascade');
-            $table->foreignUuid('grup_id')->nullable()->constrained('grup', 'id_grup')->onDelete('cascade');
+            $table->foreignUuid('pinjaman_id')->nullable()->constrained('pinjaman', 'id')->onDelete('cascade');
+            $table->foreignUuid('grup_id')->nullable()->constrained('grup', 'id')->onDelete('cascade');
             $table->timestamps();
         });
     }

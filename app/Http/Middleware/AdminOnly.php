@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,8 +17,9 @@ class AdminOnly
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $user = Auth::user();
-        if ($user->role !== 'admin') {
+        $user = Auth::user()->id;
+        $userRole = User::with('role_user')->find($user);
+        if ($userRole->role_user->nama_role !== 'admin') {
             return redirect()->back();
         }
         return $next($request);

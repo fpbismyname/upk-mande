@@ -18,7 +18,7 @@ class RoleUserFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_role' => (string) Str::uuid(),
+            'id' => (string) Str::uuid(),
         ];
     }
 }

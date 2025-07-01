@@ -1,12 +1,12 @@
 <?php
 
-namespace App\View\Components\admin\transaksi;
+namespace App\View\Components\ui;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class pinjaman extends Component
+class navbarAdmin extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class pinjaman extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.admin.transaksi.pinjaman');
+        return view('components.ui.navbar-admin');
     }
 }

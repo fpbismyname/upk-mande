@@ -1,12 +1,12 @@
 <?php
 
-namespace App\View\Components\admin\laporan;
+namespace App\View\Components\admin\crud;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class transaksi extends Component
+class add extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class transaksi extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.admin.laporan.transaksi');
+        return view('components.admin.crud.add');
     }
 }

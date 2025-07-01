@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('grup', function (Blueprint $table) {
-            $table->uuid('id_grup')->primary();
+            $table->uuid('id')->primary();
             $table->string('nama_grup');
             $table->decimal('limit_pinjaman', 11, 2)->default(2000000.00);
             $table->enum('status', ['aktif', 'non-aktif'])->default('non-aktif');
-            $table->foreignUuid('ketua_user_id')->nullable()->constrained('users', 'id_user')->onDelete('cascade');
+            $table->foreignUuid('ketua_user_id')->nullable()->constrained('users', 'id')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -6,7 +6,8 @@
         ],
         [
             'icon' => 'layout-dashboard',
-            'name' => 'dashboard',
+            'title' => 'dashboard',
+            'route' => '/admin',
             'type' => 'item',
         ],
         [
@@ -14,55 +15,66 @@
             'type' => 'divider',
         ],
         [
-            'icon' => 'users',
-            'name' => 'data-anggota',
+            'icon' => 'user-round',
+            'title' => 'Data akun',
+            'route' => '/admin/data-user',
             'type' => 'item',
         ],
         [
-            'title' => 'transaksi',
-            'icon' => 'arrow-left-right',
+            'title' => 'Grup',
+            'icon' => 'book-user',
+            'route' => 'grup',
             'type' => 'dropdown',
             'children' => [
                 [
-                    'icon' => 'hand-coins',
-                    'name' => 'pinjaman',
+                    'icon' => 'users',
+                    'title' => 'Data grup',
+                    'route' => '/admin/grup/data-grup',
                 ],
                 [
-                    'icon' => 'banknote-arrow-down',
-                    'name' => 'angsuran',
-                ],
-                [
-                    'icon' => 'coins',
-                    'name' => 'pencairan',
+                    'icon' => 'file-user',
+                    'title' => 'Data anggota grup',
+                    'route' => '/admin/grup/data-anggota-grup',
                 ],
             ],
         ],
         [
-            'title' => 'laporan',
-            'icon' => 'book',
+            'title' => 'Transaksi',
+            'icon' => 'arrow-left-right',
+            'route' => 'transaksi',
             'type' => 'dropdown',
             'children' => [
                 [
                     'icon' => 'hand-coins',
-                    'name' => 'pinjaman',
+                    'title' => 'Pinjaman',
+                    'route' => '/admin/transaksi/pinjaman',
                 ],
                 [
-                    'icon' => 'arrow-left-right',
-                    'name' => 'transaksi',
+                    'icon' => 'coins',
+                    'title' => 'Cicilan Pinjaman',
+                    'route' => '/admin/transaksi/cicilan-pinjaman',
                 ],
                 [
-                    'icon' => 'users',
-                    'name' => 'data-anggota',
+                    'icon' => 'banknote-arrow-down',
+                    'title' => 'Pencairan Dana',
+                    'route' => '/admin/transaksi/pencairan-dana',
+                ],
+                [
+                    'icon' => 'file-clock',
+                    'title' => 'Status Histori Pinjaman',
+                    'route' => '/admin/transaksi/status-histori-pinjaman',
                 ],
             ],
         ],
     ];
-    $currentMenu = request()->query('menu');
+    $currentRoute = GeneralHelper::currentRouteName();
 @endphp
 
+@props(['title' => 'Header content', 'leftItem' => false])
+
 <section id="sidebar-admin">
-    <div class="flex min-h-screen flex-row bg-blue-600">
-        <div class="flex-col hidden sm:flex sm:w-60 bg-base-200">
+    <aside class="flex min-h-screen flex-row w-screen">
+        <div class="flex-col hidden sm:flex sm:w-64 bg-base-200">
             <div class="flex p-4 bg-base-200">
                 <h1 class="font-bold text-xl">
                     {{ GeneralHelper::getAppName() }}
@@ -71,47 +83,49 @@
             <div class="flex gap-4">
                 <ul class="flex flex-1 flex-col *:p-2 p-2">
                     @foreach ($ListMenu as $menu)
+                        {{-- Type Divider --}}
                         @if ($menu['type'] === 'divider')
                             <li class="divider divider-start my-2 text-sm px-4 text-gray-500">
-                                {{ $UpperCase($menu['title']) }}
+                                {{ GeneralHelper::UpperCase($menu['title']) }}
                             </li>
                         @endif
+                        {{-- Type item --}}
                         @if ($menu['type'] === 'item')
                             @php
-                                // Check current Active menu item
-                                $activeMenu = $currentMenu === $menu['name'];
+                                $activeMenu = GeneralHelper::Equals($currentRoute, $menu['route']);
                             @endphp
                             <li
                                 class="flex gap-2 items-center rounded-xl cursor-pointer transition-all {{ $activeMenu ? 'bg-base-300' : 'hover:bg-base-300' }}">
-                                <a href="?menu={{ $menu['name'] }}"
+                                <a href="{{ $menu['route'] }}"
                                     class="w-full flex gap-2 item-center {{ $activeMenu ? 'font-bold' : '' }}">
                                     <x-utils.lucide-icon iconName="{{ $menu['icon'] }}" />
-                                    {{ $UpperCase($menu['name']) }}
+                                    {{ GeneralHelper::UpperCase($menu['title']) }}
                                 </a>
                             </li>
                         @endif
                         <li>
+                            {{-- Type Dropdown --}}
                             @if ($menu['type'] === 'dropdown')
                                 @php
-                                    $activeMenuDropdown = $Contains($currentMenu, $menu['title'] . '-');
+                                    $activeMenuDropdown = GeneralHelper::Contains($currentRoute, $menu['route']);
                                 @endphp
                                 <div class="collapse {{ $activeMenuDropdown ? 'collapse-open' : '' }}">
                                     <input type="checkbox">
                                     <div
                                         class="collapse-title flex item-center gap-2 p-0 {{ $activeMenuDropdown ? 'font-bold' : '' }}">
                                         <x-utils.lucide-icon iconName="{{ $menu['icon'] }}" />
-                                        {{ $UpperCase($menu['title']) }}
+                                        {{ GeneralHelper::UpperCase($menu['title']) }}
                                     </div>
                                     <div class="collapse-content">
                                         @foreach ($menu['children'] as $item)
                                             @php
                                                 // Check Current Active Dropdown Item
-                                                $activeItem = $currentMenu === $menu['title'] . '-' . $item['name'];
+                                                $activeMenuItem = GeneralHelper::Equals($currentRoute, $item['route']);
                                             @endphp
-                                            <a class="flex gap-2 items-center rounded-xl cursor-pointer transition-all w-full {{ $activeItem ? 'bg-base-300' : 'hover:bg-base-300' }} p-2 {{ $activeItem ? 'font-bold' : '' }}"
-                                                href="?menu={{ $menu['title'] }}-{{ $item['name'] }}">
+                                            <a class="flex gap-2 items-center rounded-xl cursor-pointer transition-all my-2 w-full {{ $activeMenuItem ? 'bg-base-300' : 'hover:bg-base-300' }} p-2 {{ $activeMenuItem ? 'font-bold' : '' }}"
+                                                href="{{ $item['route'] }}">
                                                 <x-utils.lucide-icon iconName="{{ $item['icon'] }}" />
-                                                {{ $UpperCase($item['name']) }}
+                                                {{ GeneralHelper::UpperCase($item['title']) }}
                                             </a>
                                         @endforeach
                                     </div>
@@ -126,9 +140,15 @@
                 <div class="flex flex-1 gap-4 items-center">
                     <img src="https://cdn-icons-png.flaticon.com/128/3135/3135715.png" alt="" class="w-10 h-10">
                     <div class="flex flex-col overflow-auto">
-                        <h5 class="font-bold overflow-hidden overflow-ellipsis">{{ $UpperCase(auth()->user()->name) }}
+                        <h5 class="font-bold overflow-hidden overflow-ellipsis">
+                            {{ GeneralHelper::UpperCase(auth()->user()->nama_lengkap) }}
                         </h5>
-                        <p>{{ $UpperCase(auth()->user()->role) }}</p>
+                        @php
+                            $userId = auth()->user()->id;
+                            $user = App\Models\User::with('role_user')->find($userId);
+                            $userRole = $user->role_user->nama_role;
+                        @endphp
+                        <p>{{ GeneralHelper::UpperCase($userRole) }}</p>
                     </div>
                 </div>
                 <div>
@@ -149,8 +169,11 @@
                 </div>
             </div>
         </div>
-        <div class="flex flex-col flex-1 w-auto bg-base-100">
-            {{ $slot }}
+        <div class="flex flex-col flex-1 overflow-x-hidden bg-base-100 w-full">
+            <x-ui.container>
+                <x-ui.navbar-admin title="{{ $title }}" :leftItem="$leftItem" />
+                {{ $slot }}
+            </x-ui.container>
         </div>
-    </div>
+    </aside>
 </section>

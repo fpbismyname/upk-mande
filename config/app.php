@@ -130,7 +130,7 @@ return [
     */
 
     'aliases' => [
-        'GeneralHelper' => App\Helpers\GeneralHelper::class
+        'GeneralHelper' => App\Helpers\GeneralHelper::class,
     ]
 
 ];

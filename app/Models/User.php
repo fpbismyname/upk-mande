@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * @property string $role_id
+ * @property string $nama_lengkap
+ * @property string $email
+ * @property string $password
+ * @property string $id
+ */
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -21,8 +28,12 @@ class User extends Authenticatable
         'nama_lengkap',
         'email',
         'password',
+        'role_id'
     ];
 
+    // Primary key and key type
+    protected $primaryKey = 'id';
+    public $incrementing = false;
     protected $keyType = 'string';
 
 
@@ -71,7 +82,7 @@ class User extends Authenticatable
 
     public function role_user()
     {
-        return $this->belongsTo(RoleUser::class);
+        return $this->belongsTo(RoleUser::class, 'role_id', 'id');
     }
 
     /**

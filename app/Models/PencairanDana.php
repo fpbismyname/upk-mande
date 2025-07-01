@@ -7,17 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 class PencairanDana extends Model
 {
     protected $table = 'pencairan_dana';
+    // Primary key and key type
+    protected $primaryKey = 'id';
+    public $incrementing = false;
     protected $keyType = 'string';
 
 
     protected $fillable = ['pinjaman_id', 'tanggal_pencairan', 'jumlah_pencairan', 'grup_id', 'keterangan'];
 
-    protected function pinjaman()
+    public function pinjaman()
     {
-        return $this->belongsTo(Pinjaman::class);
+        return $this->belongsTo(Pinjaman::class, 'pinjaman_id', 'id');
     }
-    protected function grup()
+    public function grup()
     {
-        return $this->belongsTo(Grup::class);
+        return $this->belongsTo(Grup::class, 'grup_id', 'id');
     }
 }

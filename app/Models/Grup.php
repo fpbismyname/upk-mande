@@ -8,30 +8,28 @@ class Grup extends Model
 {
 
     protected $table = 'grup';
+    // Primary key and key type
+    protected $primaryKey = 'id';
+    public $incrementing = false;
     protected $keyType = 'string';
 
     protected $fillable = [
         'nama_grup',
         'limit_pinjaman',
         'status',
-        'anggota_id',
         'ketua_user_id'
     ];
 
     public function anggota()
     {
-        return $this->hasMany(Anggota::class);
+        return $this->hasMany(Anggota::class, 'grup_id', 'id');
     }
     public function pinjaman()
     {
-        return $this->hasMany(Pinjaman::class);
+        return $this->hasMany(Pinjaman::class, 'grup_id', 'id');
     }
     public function cicilan_pinjaman()
     {
-        return $this->hasMany(CicilanPinjaman::class);
-    }
-    public function pencairan_dana()
-    {
-        return $this->hasMany(PencairanDana::class);
+        return $this->hasMany(CicilanPinjaman::class, 'grup_id', 'id');
     }
 }

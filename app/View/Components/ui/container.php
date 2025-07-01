@@ -1,12 +1,12 @@
 <?php
 
-namespace App\View\Components\admin;
+namespace App\View\Components\ui;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class dataAnggota extends Component
+class container extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class dataAnggota extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.admin.data-anggota');
+        return view('components.ui.container');
     }
 }

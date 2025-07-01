@@ -39,12 +39,12 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'nama_lengkap' => 'adminUpkMande',
             'email' => 'adminUpkMande@gmail.com',
-            'role_id' => RoleUser::where('nama_role', 'admin')->first()->id_role,
+            'role_id' => RoleUser::where('nama_role', 'admin')->first()->id,
             'password' => Hash::make('admin123')
         ]);
         User::factory()->create([
             'nama_lengkap' => 'Bunda Nisa',
-            'role_id' => RoleUser::where('nama_role', 'member')->first()->id_role,
+            'role_id' => RoleUser::where('nama_role', 'member')->first()->id,
             'email' => 'Nisa@gmail.com',
             'password' => Hash::make('nisa123')
         ]);

@@ -19,12 +19,21 @@
                         <li><a href="#about">Tentang</a></li>
                         <li><a href="#regulation">Teregulasi</a></li>
                         <li><a href="#contact">Kontak</a></li>
+                        @php
+                            $userId = auth()->user()->id_user ?? '';
+                            $user = App\Models\User::with('role_user')->find($userId);
+                            $currentRole = $user->role_user->nama_role ?? '';
+                        @endphp
                         @auth
-                            @if (auth()->user()->role !== 'admin')
-                                <li><a href="{{ route('dashboard') }}" class="btn btn-sm btn-secondary">Dashboard</a></li>
-                            @else
+                            @if ($currentRole === 'admin')
                                 <li><a href="{{ route('admin-dashboard') }}" class="btn btn-sm btn-secondary">Admin
                                         Dashboard</a></li>
+                            @elseif ($currentRole === 'member')
+                                <li><a href="{{ route('dashboard') }}" class="btn btn-sm btn-secondary">Dashboard</a></li>
+                            @else
+                                <li><a href="{{ route('admin-dashboard') }}" class="btn btn-sm btn-secondary">Dashboard
+                                        {{ $currentRole }}</a>
+                                </li>
                             @endif
                         @else
                             <li><a href="{{ route('login') }}" class="btn btn-sm btn-secondary">Buka akun</a></li>

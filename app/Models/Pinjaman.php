@@ -7,17 +7,24 @@ use Illuminate\Database\Eloquent\Model;
 class Pinjaman extends Model
 {
     protected $table = 'pinjaman';
+    // Primary key and key type
+    protected $primaryKey = 'id';
+    public $incrementing = false;
     protected $keyType = 'string';
 
 
     protected $fillable = ['jumlah_pinjaman', 'tenor', 'suku_bunga', 'status', 'grup_id'];
 
-    protected function grup()
+    public function grup()
     {
-        return $this->belongsTo(Grup::class);
+        return $this->belongsTo(Grup::class, 'grup_id', 'id');
     }
-    protected function status_histori_pinjaman()
+    public function pencairan_dana()
     {
-        return $this->belongsTo(StatusHistoriPinjaman::class);
+        return $this->belongsTo(PencairanDana::class, 'pinjaman_id', 'id');
+    }
+    public function status_histori_pinjaman()
+    {
+        return $this->belongsTo(StatusHistoriPinjaman::class, 'pinjaman_id', 'id');
     }
 }
