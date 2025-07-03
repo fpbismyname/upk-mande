@@ -50,4 +50,8 @@ class GeneralHelper
             return "/" . Route::getCurrentRoute()->uri();
         }
     }
+    public static function formatRupiah($value)
+    {
+        return "Rp " . number_format($value, 0, ',', '.');
+    }
 }

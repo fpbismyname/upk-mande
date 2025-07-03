@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('status', function (Blueprint $table) {
+        Schema::create('suku_bunga', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('nama_status')->nullable();
-            $table->enum('type_status', ['pinjaman', 'cicilan_pinjaman', 'grup'])->nullable();
+            $table->decimal('jumlah_suku_bunga', 5, 2);
             $table->timestamps();
         });
     }
@@ -24,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('status');
+        Schema::dropIfExists('suku_bunga');
     }
 };

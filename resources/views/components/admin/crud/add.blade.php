@@ -1,11 +1,13 @@
 @php
     $title = $title ?? '';
     $form = $formConfig ?? [];
+    $back = route($routeName . '.index');
+    $submit = route($routeName . '.store');
 @endphp
 <x-app title="{{ $title }}">
     <x-ui.admin-sidebar title="{{ $title }}">
         <div class="bg-base-300 p-8 rounded-xl flex flex-col">
-            <form action="{{ route($routeSubmit) }}" method="POST" class="flex flex-col flex-1 gap-4">
+            <form action="{{ $submit }}" method="POST" class="flex flex-col flex-1 gap-4">
                 @if ($form)
                     <fieldset class="fieldset w-full rounded-xl gap-4">
                         @csrf
@@ -13,7 +15,7 @@
                             @if ($col['type'] === 'number' || $col['type'] === 'text' || $col['type'] === 'email' || $col['type'] === 'password')
                                 <div class="flex flex-col  gap-2">
                                     <input type="{{ $col['type'] }}" name="{{ $col['name'] }}"
-                                        class="input input-sm input-neutral w-full"
+                                        class="input input-sm w-full"
                                         placeholder="{{ GeneralHelper::UpperCase($col['label']) }}"
                                         value="{{ old($col['name']) }}" />
                                     @error($col['name'])
@@ -28,7 +30,12 @@
                                         @foreach ($col['option'] as $key => $value)
                                             <option value="{{ $key }}"
                                                 @if (old($col['name']) === $key) selected @endif>
-                                                {{ GeneralHelper::UpperCase($value) }}</option>
+                                                @if (is_numeric($value) && $col['name'] === 'suku_bunga')
+                                                    {{ GeneralHelper::UpperCase($value) }} %
+                                                @else
+                                                    {{ GeneralHelper::UpperCase($value) }}
+                                                @endif
+                                            </option>
                                         @endforeach
                                     </select>
                                     @error($col['name'])
@@ -41,6 +48,7 @@
                 @endif
                 <div class="flex flex-1 gap-2 self-center">
                     <button class="btn btn-sm btn-primary">Submit</button>
+                    <a href="{{ $back }}" class="btn btn-sm btn-secondary">Kembali</a>
                 </div>
             </form>
         </div>

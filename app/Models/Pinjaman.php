@@ -13,22 +13,22 @@ class Pinjaman extends Model
     protected $keyType = 'string';
 
 
-    protected $fillable = ['jumlah_pinjaman', 'tenor', 'suku_bunga', 'status_id', 'grup_id'];
+    protected $fillable = ['id', 'nominal_pinjaman', 'tenor', 'suku_bunga', 'status_id', 'grup_id', 'jumlah_pinjaman'];
 
     public function grup()
     {
         return $this->belongsTo(Grup::class, 'grup_id', 'id');
     }
-    public function pencairan_dana()
-    {
-        return $this->belongsTo(PencairanDana::class, 'pinjaman_id', 'id');
-    }
-    public function status_histori_pinjaman()
-    {
-        return $this->belongsTo(StatusHistoriPinjaman::class, 'pinjaman_id', 'id');
-    }
     public function status()
     {
         return $this->belongsTo(Status::class, 'status_id', 'id');
+    }
+    public function tenor()
+    {
+        return $this->belongsTo(Tenor::class, 'tenor', 'id');
+    }
+    public function suku_bunga()
+    {
+        return $this->belongsTo(SukuBunga::class, 'jumlah_suku_bunga', 'id');
     }
 }

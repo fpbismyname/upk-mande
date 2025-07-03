@@ -2,8 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Pendanaan;
 use App\Models\RoleUser;
 use App\Models\Status;
+use App\Models\SukuBunga;
+use App\Models\Tenor;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -52,31 +55,67 @@ class DatabaseSeeder extends Seeder
 
         // Status Factory
         Status::factory()->create([
-            'nama_status' => 'disetujui',
-        ]);
-        Status::factory()->create([
-            'nama_status' => 'diproses',
-        ]);
-        Status::factory()->create([
             'nama_status' => 'dibayar',
+            'type_status' => 'cicilan_pinjaman',
         ]);
         Status::factory()->create([
             'nama_status' => 'belum dibayar',
+            'type_status' => 'cicilan_pinjaman',
+        ]);
+        Status::factory()->create([
+            'nama_status' => 'diproses',
+            'type_status' => 'pinjaman',
         ]);
         Status::factory()->create([
             'nama_status' => 'ditolak',
+            'type_status' => 'pinjaman',
         ]);
         Status::factory()->create([
             'nama_status' => 'dibatalkan',
+            'type_status' => 'pinjaman',
+        ]);
+        Status::factory()->create([
+            'nama_status' => 'belum_lunas',
+            'type_status' => 'pinjaman',
+        ]);
+        Status::factory()->create([
+            'nama_status' => 'lunas',
+            'type_status' => 'pinjaman',
         ]);
         Status::factory()->create([
             'nama_status' => 'aktif',
+            'type_status' => 'grup',
         ]);
         Status::factory()->create([
             'nama_status' => 'non-aktif',
+            'type_status' => 'grup',
         ]);
         Status::factory()->create([
             'nama_status' => 'diblokir',
+            'type_status' => 'grup',
+        ]);
+
+        // Pendanaan
+        Pendanaan::factory()->create([
+            'saldo' => 2000000, // Dua juta rupiah
+        ]);
+
+        // Tenor
+        Tenor::factory()->create([
+            'nama_tenor' => '3 bulan',
+            'waktu_tenor' => 3,
+        ]);
+        Tenor::factory()->create([
+            'nama_tenor' => '6 bulan',
+            'waktu_tenor' => 6,
+        ]);
+        Tenor::factory()->create([
+            'nama_tenor' => '9 bulan',
+            'waktu_tenor' => 9,
+        ]);
+        // Suku bunga
+        SukuBunga::factory()->create([
+            'jumlah_suku_bunga' => 18,
         ]);
     }
 }

@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('pinjaman', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->decimal('nominal_pinjaman', 11, 2);
+            $table->foreignUuid('tenor')->nullable()->constrained('tenor', 'id')->onDelete('set null');
             $table->decimal('jumlah_pinjaman', 11, 2);
-            $table->string('tenor');
-            $table->decimal('suku_bunga', 3, 2);
+            $table->foreignUuid('suku_bunga')->nullable()->constrained('suku_bunga', 'id')->onDelete('set null');
             $table->foreignUuid('status_id')->nullable()->constrained('status', 'id')->onDelete('set null');
             $table->foreignUuid('grup_id')->nullable()->constrained('grup', 'id')->onDelete('cascade');
             $table->timestamps();

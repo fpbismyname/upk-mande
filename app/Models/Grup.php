@@ -39,6 +39,6 @@ class Grup extends Model
     }
     public function users()
     {
-        return $this->belongsTo(Status::class, 'ketua_user_id', 'id');
+        return $this->belongsTo(User::class, 'ketua_user_id', 'id');
     }
 }

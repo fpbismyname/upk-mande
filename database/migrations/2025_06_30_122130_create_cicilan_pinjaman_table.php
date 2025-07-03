@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('cicilan_pinjaman', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->decimal('jumlah_cicilan', 11, 2);
+            $table->decimal('nominal_cicilan', 11, 2);
             $table->dateTime('jatuh_tempo');
             $table->foreignUuid('status_id')->nullable()->constrained('status', 'id')->onDelete('set null');
             $table->foreignUuid('grup_id')->nullable()->constrained('grup', 'id')->onDelete('cascade');

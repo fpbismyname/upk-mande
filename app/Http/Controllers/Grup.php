@@ -36,7 +36,7 @@ class Grup extends Controller
                 'label' => 'Status Grup',
                 'name' => 'status_id',
                 'type' => 'select',
-                'option' => Status::pluck('nama_status', 'id')->toArray()
+                'option' => Status::where('type_status', 'grup')->pluck('nama_status', 'id')
             ],
             [
                 'label' => 'Ketua',
@@ -50,7 +50,7 @@ class Grup extends Controller
     {
         $title = $this->title;
         $routeName = Grup::$routeName;
-        $exclude = [''];
+        $include = ['nama_grup', 'limit_pinjaman', 'status', 'nama_status',  'nama_status', 'nama_lengkap'];
         $placeholder = "Cari data grup...";
         $query = request()->query('search');
         $paginate = $this->currentPaginate;
@@ -58,17 +58,17 @@ class Grup extends Controller
             $datas = ModelsGrup::where(function ($qr) use ($query) {
                 $qr->where('nama_grup', 'like', "%{$query}%")
                     ->orWhere('limit_pinjaman', 'like', "%{$query}%")
-                    ->orWhereHas('status_id', function ($q) use ($query) {
+                    ->orWhereHas('status', function ($q) use ($query) {
                         $q->where('nama_status', 'like', "%{$query}%");
                     })
-                    ->orWhereHas('ketua_user_id', function ($q) use ($query) {
+                    ->orWhereHas('users', function ($q) use ($query) {
                         $q->where('nama_lengkap', 'like', "%{$query}%");
                     });
             })->with(['status', 'users'])->paginate($paginate)->withQueryString();
-            return view('components.admin.dashboard', compact('datas', 'title', 'exclude', 'placeholder', 'routeName'));
+            return view('components.admin.dashboard', compact('datas', 'title', 'include', 'placeholder', 'routeName'));
         } else {
             $datas = ModelsGrup::with(['status', 'users'])->paginate($paginate)->withQueryString();
-            return view('components.admin.dashboard', compact('datas', 'title', 'exclude', 'placeholder', 'routeName'));
+            return view('components.admin.dashboard', compact('datas', 'title', 'include', 'placeholder', 'routeName'));
         }
     }
 
@@ -78,10 +78,10 @@ class Grup extends Controller
     public function create()
     {
         $title = "Tambah $this->title";
-        $routeSubmit = Grup::$routeName . ".store";
+        $routeName = Grup::$routeName;
         $formConfig = $this->formConfig;
 
-        return view('components.admin.crud.add', compact('title', 'formConfig', 'routeSubmit'));
+        return view('components.admin.crud.add', compact('title', 'formConfig', 'routeName'));
     }
 
     /**
@@ -89,16 +89,16 @@ class Grup extends Controller
      */
     public function store(Request $request)
     {
-        $creds = $request->validate([
-            'nama_grup' => 'required',
+        $record = $request->validate([
+            'nama_grup' => 'required | unique:grup,nama_grup',
             'limit_pinjaman' => 'required|numeric|digits_between:1,20',
             'status_id' => 'required',
             'ketua_user_id' => 'required',
         ]);
 
-        $creds['id'] = (string)Str::uuid();
+        $record['id'] = (string)Str::uuid();
 
-        $storingData = ModelsGrup::create($creds);
+        $storingData = ModelsGrup::create($record);
 
         if ($storingData) {
             return redirect()->route(Grup::$routeName . '.index')->with(Messages::$collection['store']['success']);
@@ -119,7 +119,12 @@ class Grup extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $title = "Edit " . $this->title;
+        $routeName = Grup::$routeName;
+        $routeSubmit =  "$routeName.update";
+        $formConfig = $this->formConfig;
+        $datas = ModelsGrup::with('status', 'users')->find($id);
+        return view('components.admin.crud.edit', compact('title', 'routeName', 'datas', 'formConfig', 'routeSubmit'));
     }
 
     /**
@@ -127,7 +132,25 @@ class Grup extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $record = ModelsGrup::findOrFail($id);
+
+        if (!$record) {
+            return redirect()->back()->with(Messages::$collection['update']['notFound']);
+        }
+
+        $datas = $request->validate([
+            'nama_grup' => 'required',
+            'limit_pinjaman' => 'required|numeric|digits_between:1,20',
+            'status_id' => 'required',
+            'ketua_user_id' => 'required',
+        ]);
+        $updatingData = $record->update($datas);
+
+        if ($updatingData) {
+            return redirect()->route(Grup::$routeName . '.index')->with(Messages::$collection['update']['success']);
+        }
+
+        return redirect()->route(Grup::$routeName . '.index')->with(Messages::$collection['update']['failed']);
     }
 
     /**

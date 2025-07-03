@@ -15,7 +15,7 @@ class Status extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
-    protected $fillable = ['id', 'status_id'];
+    protected $fillable = ['id', 'status_id', 'type_status'];
 
     protected function pinjaman()
     {
@@ -24,10 +24,6 @@ class Status extends Model
     protected function cicilan_pinjaman()
     {
         return $this->hasMany(CicilanPinjaman::class, 'status_id', 'id');
-    }
-    protected function status_histori_pinjaman()
-    {
-        return $this->hasMany(StatusHistoriPinjaman::class, 'status_id', 'id');
     }
     protected function grup()
     {

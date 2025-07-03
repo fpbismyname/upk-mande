@@ -56,7 +56,7 @@ class User extends Controller
     {
         $title = $this->title;
         $routeName = User::$routeName;
-        $exclude = ['role_id', 'id', 'password'];
+        $include = ['nil', 'nama_lengkap', 'email', 'role_user', 'nama_role'];
         $placeholder = "Cari data akun...";
         $query = request()->query('search');
         $paginate = $this->currentPaginate;
@@ -68,10 +68,10 @@ class User extends Controller
                         $q->where('nama_role', 'like', "%{$query}%");
                     });
             })->with('role_user')->paginate($paginate)->withQueryString();
-            return view('components.admin.dashboard', compact('datas', 'title', 'exclude', 'placeholder', 'routeName'));
+            return view('components.admin.dashboard', compact('datas', 'title', 'include', 'placeholder', 'routeName'));
         } else {
             $datas = ModelsUser::with('role_user')->paginate($paginate)->withQueryString();
-            return view('components.admin.dashboard', compact('datas', 'title', 'exclude', 'placeholder', 'routeName'));
+            return view('components.admin.dashboard', compact('datas', 'title', 'include', 'placeholder', 'routeName'));
         }
     }
 
@@ -137,9 +137,9 @@ class User extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $user = ModelsUser::findOrFail($id);
+        $record = ModelsUser::findOrFail($id);
 
-        if (!$user) {
+        if (!$record) {
             return redirect()->back()->with(Messages::$collection['update']['notFound']);
         }
 
@@ -158,7 +158,7 @@ class User extends Controller
             unset($creds['password']);
             unset($creds['reset-password']);
         }
-        $updatingData = $user->update($creds);
+        $updatingData = $record->update($creds);
         if ($updatingData) {
             return redirect()->route(User::$routeName . '.index')->with(Messages::$collection['update']['success']);
         }

@@ -21,6 +21,12 @@
             'type' => 'item',
         ],
         [
+            'icon' => 'banknote-arrow-down',
+            'title' => 'Pendanaan',
+            'route' => '/admin/pendanaan',
+            'type' => 'item',
+        ],
+        [
             'title' => 'Grup',
             'icon' => 'book-user',
             'route' => 'grup',
@@ -47,22 +53,30 @@
                 [
                     'icon' => 'hand-coins',
                     'title' => 'Pinjaman',
-                    'route' => '/admin/pinjaman',
+                    'route' => '/admin/transaksi-pinjaman',
                 ],
                 [
                     'icon' => 'coins',
                     'title' => 'Cicilan Pinjaman',
-                    'route' => '/admin/cicilan-pinjaman',
+                    'route' => '/admin/transaksi-cicilan-pinjaman',
+                ],
+            ],
+        ],
+        [
+            'title' => 'Laporan',
+            'icon' => 'book-text',
+            'route' => 'laporan',
+            'type' => 'dropdown',
+            'children' => [
+                [
+                    'icon' => 'hand-coins',
+                    'title' => 'Pinjaman',
+                    'route' => '/admin/laporan-pinjaman',
                 ],
                 [
-                    'icon' => 'banknote-arrow-down',
-                    'title' => 'Pencairan Dana',
-                    'route' => '/admin/pencairan-dana',
-                ],
-                [
-                    'icon' => 'file-clock',
-                    'title' => 'Status Histori Pinjaman',
-                    'route' => '/admin/status-histori-pinjaman',
+                    'icon' => 'users',
+                    'title' => 'Data Grup',
+                    'route' => '/admin/laporan-data-grup',
                 ],
             ],
         ],
@@ -73,9 +87,9 @@
 @props(['title' => 'Header content', 'leftItem' => false, 'routeName' => ''])
 
 <section id="sidebar-admin">
-    <aside class="flex min-h-screen flex-row w-screen">
-        <div class="flex-col hidden sm:flex sm:w-64 bg-base-200">
-            <div class="flex p-4 bg-base-200">
+    <aside class="flex min-h-screen flex-row w-screen overflow-hidden">
+        <div class="flex-col hidden sm:flex sm:w-64 bg-base-200 max-h-screen overflow-y-auto overflow-x-hidden">
+            <div class="p-4 bg-base-300 sticky top-0">
                 <h1 class="font-bold text-xl">
                     {{ GeneralHelper::getAppName() }}
                 </h1>
@@ -103,8 +117,8 @@
                                 </a>
                             </li>
                         @endif
+                        {{-- Type Dropdown --}}
                         <li>
-                            {{-- Type Dropdown --}}
                             @if ($menu['type'] === 'dropdown')
                                 @php
                                     $activeMenuDropdown = GeneralHelper::Contains($currentRoute, $menu['route']);
@@ -134,11 +148,10 @@
                         </li>
                     @endforeach
                 </ul>
-
             </div>
-            <div class="flex p-4 bg-base-300 mt-auto items-center gap-4">
+            <div class="flex p-4 bg-base-300 mt-auto items-center gap-4 sticky bottom-0">
                 <div class="flex flex-1 gap-4 items-center">
-                    <img src="https://cdn-icons-png.flaticon.com/128/3135/3135715.png" alt="" class="w-10 h-10">
+                    <img src="{{ asset('images/profile.png') }}" alt="" class="w-10 h-10">
                     <div class="flex flex-col overflow-auto">
                         <h5 class="font-bold overflow-hidden overflow-ellipsis">
                             {{ GeneralHelper::UpperCase(auth()->user()->nama_lengkap) }}
@@ -152,20 +165,12 @@
                     </div>
                 </div>
                 <div>
-                    <div class="dropdown dropdown-top">
-                        <div tabindex="0" role="button" class="btn btn-circle">
-                            <x-utils.lucide-icon iconName="ellipsis-vertical" />
-                        </div>
-                        <ul tabindex="0" class="menu dropdown-content bg-base-200 w-56 rounded-xl border-2">
-                            <div class="divider m-0"></div>
-                            <li>
-                                <form action="{{ route('logout') }}" method="POST">
-                                    @csrf
-                                    <button type="submit">Logout</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button class="btn btn-sm btn-circle btn-error">
+                            <x-utils.lucide-icon iconName="log-out" />
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

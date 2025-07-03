@@ -2,7 +2,9 @@
     $title = $title ?? '';
     $form = $formConfig ?? [];
     $data = isset($datas) ? $datas->toArray() : [];
+    $back = url()->current() === url()->previous() ? route('admin-dashboard') : url()->previous();
 @endphp
+
 <x-app title="{{ $title }}">
     <x-ui.admin-sidebar title="{{ $title }}" :routeName="$routeName">
         <div class="bg-base-300 p-8 rounded-xl flex flex-col">
@@ -17,8 +19,8 @@
                                 @if ($col['name'] === 'password')
                                     <div x-data="{ resetPass: false }" class="flex flex-col gap-4">
                                         <label class="label">
-                                            <input type="checkbox" class="checkbox checkbox-sm checkbox-primary"
-                                                x-model="resetPass" name="reset-{{ $col['name'] }}">
+                                            <input type="checkbox" class="checkbox checkbox-sm" x-model="resetPass"
+                                                name="reset-{{ $col['name'] }}">
                                             Reset Password ?
                                         </label>
                                         <input x-show="resetPass" type="{{ $col['type'] }}" name="{{ $col['name'] }}"
@@ -29,7 +31,7 @@
                                     </div>
                                 @else
                                     <input type="{{ $col['type'] }}" name="{{ $col['name'] }}"
-                                        class="input input-sm input-neutral w-full"
+                                        class="input input-sm w-full"
                                         placeholder="{{ GeneralHelper::UpperCase($col['label']) }}"
                                         value="{{ $data[$col['name']] }}" />
                                     @error($col['name'])
@@ -55,6 +57,7 @@
                 @endif
                 <div class="flex flex-1 gap-2 self-center">
                     <button class="btn btn-sm btn-primary" type="submit">Submit</button>
+                    <a href="{{ $back }}" class="btn btn-sm btn-secondary">Kembali</a>
                 </div>
             </form>
         </div>

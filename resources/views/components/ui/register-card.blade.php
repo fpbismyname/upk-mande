@@ -13,8 +13,8 @@
             @csrf
             @foreach (App\Models\User::getFieldUser('register') as $field)
                 <legend class="fieldset-legend">{{ $field['label'] }}</legend>
-                <input type="{{ $field['type'] }}" class="input input-sm input-neutral w-full"
-                    name="{{ $field['name'] }}" value="{{ old($field['name']) }}">
+                <input type="{{ $field['type'] }}" class="input input-sm w-full" name="{{ $field['name'] }}"
+                    value="{{ old($field['name']) }}">
                 @error($field['name'])
                     <p class="label text-error">{{ $message }}</p>
                 @enderror

@@ -34,6 +34,24 @@ class Messages
             'type' => 'error',
         ]
     ];
+    public static $pendanaan = [
+        'add-success' => [
+            'message' => 'Saldo berhasil ditambahkan.',
+            'type' => 'success',
+        ],
+        'add-failed' => [
+            'message' => 'Saldo gagal ditambahkan.',
+            'type' => 'error',
+        ],
+        'decrease-success' => [
+            'message' => 'Saldo berhasil ditarik.',
+            'type' => 'success',
+        ],
+        'decrease-failed' => [
+            'message' => 'Saldo gagal ditarik.',
+            'type' => 'error',
+        ]
+    ];
     public static $collection = [
         'store' => [
             'success' => [
