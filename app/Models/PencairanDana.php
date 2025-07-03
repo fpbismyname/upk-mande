@@ -13,7 +13,7 @@ class PencairanDana extends Model
     protected $keyType = 'string';
 
 
-    protected $fillable = ['pinjaman_id', 'tanggal_pencairan', 'jumlah_pencairan', 'grup_id', 'keterangan'];
+    protected $fillable = ['id', 'pinjaman_id', 'tanggal_pencairan', 'jumlah_pencairan', 'grup_id', 'keterangan'];
 
     public function pinjaman()
     {

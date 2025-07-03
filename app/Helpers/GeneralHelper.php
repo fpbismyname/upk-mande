@@ -11,16 +11,20 @@ class GeneralHelper
     public static function getAppName(): string
     {
         $appName = config("app.name") ?? "";
-        $formattedAppName = Str::of($appName)->replace(["_", "-"], " ");
+        $formattedAppName = Str::of($appName)->replace(["_", "-"], " ")->toString();
         return ucwords($formattedAppName);
     }
     public static function UpperCase($value)
     {
-        return Str::of($value)->replace(['-', "_"], ' ')->ucfirst();
+        return Str::of($value)->replace(['-', "_"], ' ')->ucfirst()->toString();
+    }
+    public static function SnakeCase($value)
+    {
+        return Str::of($value)->replace(['-', "_"], ' ')->snake()->toString();
     }
     public static function LowerCase($value)
     {
-        return Str::of($value)->replace(['-', "_"], ' ')->lower();
+        return Str::of($value)->replace(['-', "_"], ' ')->lower()->toString();
     }
     public static function Contains($value, $contains)
     {

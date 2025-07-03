@@ -14,6 +14,7 @@ class AdminDashboard extends Controller
         $title = "Dashboard";
         $exclude = $this->exclude;
         $datas = User::count();
-        return view('components.admin.dashboard', compact('title', 'exclude', 'datas'));
+        $routeName = 'admin';
+        return view('components.admin.dashboard', compact('title', 'exclude', 'datas', 'routeName'));
     }
 }

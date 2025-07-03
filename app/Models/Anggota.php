@@ -12,7 +12,7 @@ class Anggota extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
-    protected $fillable = ['nik', 'nama_lengkap', 'alamat', 'grup_id'];
+    protected $fillable = ['id', 'nik', 'nama_lengkap', 'alamat', 'grup_id'];
     public function grup()
     {
         return $this->belongsTo(Grup::class, 'grup_id', 'id');

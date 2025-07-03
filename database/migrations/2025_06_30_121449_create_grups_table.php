@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('nama_grup');
             $table->decimal('limit_pinjaman', 11, 2)->default(2000000.00);
-            $table->enum('status', ['aktif', 'non-aktif'])->default('non-aktif');
+            $table->foreignUuid('status_id')->nullable()->constrained('status', 'id')->onDelete('set null');
             $table->foreignUuid('ketua_user_id')->nullable()->constrained('users', 'id')->onDelete('cascade');
             $table->timestamps();
         });

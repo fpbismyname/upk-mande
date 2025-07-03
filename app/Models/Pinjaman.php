@@ -13,7 +13,7 @@ class Pinjaman extends Model
     protected $keyType = 'string';
 
 
-    protected $fillable = ['jumlah_pinjaman', 'tenor', 'suku_bunga', 'status', 'grup_id'];
+    protected $fillable = ['jumlah_pinjaman', 'tenor', 'suku_bunga', 'status_id', 'grup_id'];
 
     public function grup()
     {
@@ -26,5 +26,9 @@ class Pinjaman extends Model
     public function status_histori_pinjaman()
     {
         return $this->belongsTo(StatusHistoriPinjaman::class, 'pinjaman_id', 'id');
+    }
+    public function status()
+    {
+        return $this->belongsTo(Status::class, 'status_id', 'id');
     }
 }

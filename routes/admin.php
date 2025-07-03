@@ -7,7 +7,7 @@ use App\Http\Middleware\AdminOnly;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', AdminOnly::class])->group(function () {
-    Route::get('/admin', [AdminDashboard::class, 'index'])->name('admin-dashboard');
-    Route::resource('/admin/data-user', User::class)->names('data-akun');
-    Route::resource('/admin/grup/data-grup', Grup::class)->names('data-anggota');
+    Route::get('admin', [AdminDashboard::class, 'index'])->name('admin-dashboard');
+    Route::resource('admin/' . User::$routeName, User::class)->names(User::$routeName);
+    Route::resource('admin/' . Grup::$routeName, Grup::class)->names(Grup::$routeName);
 });

@@ -29,12 +29,12 @@
                 [
                     'icon' => 'users',
                     'title' => 'Data grup',
-                    'route' => '/admin/grup/data-grup',
+                    'route' => '/admin/data-grup',
                 ],
                 [
                     'icon' => 'file-user',
                     'title' => 'Data anggota grup',
-                    'route' => '/admin/grup/data-anggota-grup',
+                    'route' => '/admin/data-anggota-grup',
                 ],
             ],
         ],
@@ -47,22 +47,22 @@
                 [
                     'icon' => 'hand-coins',
                     'title' => 'Pinjaman',
-                    'route' => '/admin/transaksi/pinjaman',
+                    'route' => '/admin/pinjaman',
                 ],
                 [
                     'icon' => 'coins',
                     'title' => 'Cicilan Pinjaman',
-                    'route' => '/admin/transaksi/cicilan-pinjaman',
+                    'route' => '/admin/cicilan-pinjaman',
                 ],
                 [
                     'icon' => 'banknote-arrow-down',
                     'title' => 'Pencairan Dana',
-                    'route' => '/admin/transaksi/pencairan-dana',
+                    'route' => '/admin/pencairan-dana',
                 ],
                 [
                     'icon' => 'file-clock',
                     'title' => 'Status Histori Pinjaman',
-                    'route' => '/admin/transaksi/status-histori-pinjaman',
+                    'route' => '/admin/status-histori-pinjaman',
                 ],
             ],
         ],
@@ -70,7 +70,7 @@
     $currentRoute = GeneralHelper::currentRouteName();
 @endphp
 
-@props(['title' => 'Header content', 'leftItem' => false])
+@props(['title' => 'Header content', 'leftItem' => false, 'routeName' => ''])
 
 <section id="sidebar-admin">
     <aside class="flex min-h-screen flex-row w-screen">
@@ -97,8 +97,8 @@
                             <li
                                 class="flex gap-2 items-center rounded-xl cursor-pointer transition-all {{ $activeMenu ? 'bg-base-300' : 'hover:bg-base-300' }}">
                                 <a href="{{ $menu['route'] }}"
-                                    class="w-full flex gap-2 item-center {{ $activeMenu ? 'font-bold' : '' }}">
-                                    <x-utils.lucide-icon iconName="{{ $menu['icon'] }}" />
+                                    class="w-full flex flex-row gap-2 item-center {{ $activeMenu ? 'font-bold' : '' }}">
+                                    <x-utils.lucide-icon iconName="{{ $menu['icon'] }}" class="self-center" />
                                     {{ GeneralHelper::UpperCase($menu['title']) }}
                                 </a>
                             </li>
@@ -113,7 +113,7 @@
                                     <input type="checkbox">
                                     <div
                                         class="collapse-title flex item-center gap-2 p-0 {{ $activeMenuDropdown ? 'font-bold' : '' }}">
-                                        <x-utils.lucide-icon iconName="{{ $menu['icon'] }}" />
+                                        <x-utils.lucide-icon iconName="{{ $menu['icon'] }}" class="my-1" />
                                         {{ GeneralHelper::UpperCase($menu['title']) }}
                                     </div>
                                     <div class="collapse-content">
@@ -171,7 +171,7 @@
         </div>
         <div class="flex flex-col flex-1 overflow-x-hidden bg-base-100 w-full">
             <x-ui.container>
-                <x-ui.navbar-admin title="{{ $title }}" :leftItem="$leftItem" />
+                <x-ui.navbar-admin title="{{ $title }}" :leftItem="$leftItem" :routeName="$routeName" />
                 {{ $slot }}
             </x-ui.container>
         </div>

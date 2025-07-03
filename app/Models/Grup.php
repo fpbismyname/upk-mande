@@ -14,9 +14,10 @@ class Grup extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
+        'id',
         'nama_grup',
         'limit_pinjaman',
-        'status',
+        'status_id',
         'ketua_user_id'
     ];
 
@@ -31,5 +32,13 @@ class Grup extends Model
     public function cicilan_pinjaman()
     {
         return $this->hasMany(CicilanPinjaman::class, 'grup_id', 'id');
+    }
+    public function status()
+    {
+        return $this->belongsTo(Status::class, 'status_id', 'id');
+    }
+    public function users()
+    {
+        return $this->belongsTo(Status::class, 'ketua_user_id', 'id');
     }
 }

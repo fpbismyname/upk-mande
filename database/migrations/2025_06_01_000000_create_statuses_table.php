@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cicilan_pinjaman', function (Blueprint $table) {
+        Schema::create('status', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->decimal('jumlah_cicilan', 11, 2);
-            $table->dateTime('jatuh_tempo');
-            $table->foreignUuid('status_id')->nullable()->constrained('status', 'id')->onDelete('set null');
-            $table->foreignUuid('grup_id')->nullable()->constrained('grup', 'id')->onDelete('cascade');
+            $table->string('nama_status')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cicilan_pinjaman');
+        Schema::dropIfExists('status');
     }
 };

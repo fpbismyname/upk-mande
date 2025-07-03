@@ -16,7 +16,7 @@ return new class extends Migration
             $table->decimal('jumlah_pinjaman', 11, 2);
             $table->string('tenor');
             $table->decimal('suku_bunga', 3, 2);
-            $table->enum('status', ['disetujui', 'ditolak']);
+            $table->foreignUuid('status_id')->nullable()->constrained('status', 'id')->onDelete('set null');
             $table->foreignUuid('grup_id')->nullable()->constrained('grup', 'id')->onDelete('cascade');
             $table->timestamps();
         });

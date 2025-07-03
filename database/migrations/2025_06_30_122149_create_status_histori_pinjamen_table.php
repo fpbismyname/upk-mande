@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('status_histori_pinjaman', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->decimal('jumlah_pinjaman', 11, 2);
-            $table->enum('status', ['diproses', 'disetujui', 'dicairkan', 'lunas', 'dibatalkan']);
+            $table->foreignUuid('status_id')->nullable()->constrained('status', 'id')->onDelete('set null');
             $table->text('catatan')->nullable();
             $table->foreignUuid('pinjaman_id')->nullable()->constrained('pinjaman', 'id')->onDelete('cascade');
             $table->foreignUuid('grup_id')->nullable()->constrained('grup', 'id')->onDelete('cascade');

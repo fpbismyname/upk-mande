@@ -20,7 +20,7 @@ class RoleUser extends Model
     protected $primaryKey = 'id';
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $fillable = ['nama_role'];
+    protected $fillable = ['id', 'nama_role'];
 
     protected function users()
     {

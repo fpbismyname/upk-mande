@@ -1524,7 +1524,7 @@
 
 <body>
     @if (session('message'))
-        <div x-data="{ show: true }" :class="show ? 'toast' : 'opacity-0'"
+        <div x-data="{ show: true }" :class="show ? 'toast' : 'opacity-0 hidden'"
             class=" toast-top toast-center z-50 transition: all;" x-init="setTimeout(() => show = false, 3000)">
             <div class="alert alert-{{ session('type') }}">
                 <span>{{ session('message') }}</span>

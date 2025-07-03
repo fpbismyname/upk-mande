@@ -1,3 +1,3 @@
-@props(['iconName' => 'blend'])
+@props(['iconName' => 'blend', 'size' => 4])
 
-<i data-lucide="{{ $iconName }}" class="w-5 h-5"></i>
+<i data-lucide="{{ $iconName }}" {{ $attributes->merge(['class' => "w-$size h-$size"]) }}></i>

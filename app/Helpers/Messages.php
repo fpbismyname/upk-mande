@@ -34,4 +34,48 @@ class Messages
             'type' => 'error',
         ]
     ];
+    public static $collection = [
+        'store' => [
+            'success' => [
+                'message' => "Data berhasil ditambahkan.",
+                'type' => 'success'
+            ],
+            'failed' => [
+                'message' => "Data gagal ditambahkan.",
+                'type' => 'error'
+            ]
+        ],
+        'update' => [
+            'success' => [
+                'message' => "Data berhasil diperbaharui.",
+                'type' => 'success'
+            ],
+            'failed' => [
+                'message' => "Data gagal diperbaharui.",
+                'type' => 'error'
+            ],
+            'notFound' => [
+                'message' => "Data yang ingin diperbaharui tidak ditemukan.",
+                'type' => 'error'
+            ],
+        ],
+        'delete' => [
+            'success' => [
+                'message' => "Data berhasil dihapus.",
+                'type' => 'success'
+            ],
+            'failed' => [
+                'message' => "Data gagal dihapus.",
+                'type' => 'error'
+            ],
+            'notFound' => [
+                'message' => "Data yang ingin dihapus tidak ditemukan.",
+                'type' => 'error'
+            ],
+            'onSession' => [
+                'message' => "Data tidak dapat dihapus.",
+                'type' => 'error'
+            ],
+        ]
+    ];
 }
