@@ -2,7 +2,6 @@
     $data = $datas;
     $includes = $include ?? [];
     $currentRoute = GeneralHelper::currentRouteName('name');
-    $isDashboard = GeneralHelper::Equals(GeneralHelper::currentRouteName(), '/admin');
     $placeholder = isset($placeholder) === true && !$data->isEmpty() ? $placeholder : '';
 @endphp
 

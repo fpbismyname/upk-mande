@@ -1,13 +1,16 @@
 @props(['datas' => [], 'includes' => [], 'routeName' => '#'])
 
 @php
-    if ($routeName === 'admin') {
+    if (!$routeName) {
         return null;
     }
     $data = $datas->first() ? $datas->first()->toArray() : [];
     $arrayKeys = array_keys($data);
 
 @endphp
+
+
+{{-- Page Pendanaan --}}
 
 @if (GeneralHelper::Contains($routeName, 'pendanaan'))
     @php
@@ -20,30 +23,40 @@
                     <div class="stat-title">Saldo Pendanaan</div>
                     <div class="stat-value">{{ GeneralHelper::formatRupiah($pendanaan['saldo']) }}</div>
                 </div>
-                <div class="stat-action">
+                <div class="stat-action" x-data="{ new_saldo: 0 }">
                     <button class="btn btn-xs btn-success" popovertarget="addFund" style="anchor-name:--add-fund">
                         Tambah saldo
                     </button>
-                    <button class="btn btn-xs btn-error" popovertarget="decreaseFund"
-                        style="anchor-name:--decrease-fund">
-                        Tarik saldo
-                    </button>
                     <ul class="dropdown menu rounded-box bg-base-300 border-2 mt-2" popover id="addFund"
                         style="position-anchor:--add-fund">
-                        <form action="{{ route($routeName . '.store') }}" class="flex gap-2" method="POST">
+                        <form action="{{ GeneralHelper::routeAction($routeName, null, 'store') }}"
+                            class="flex flex-col   gap-2" method="POST">
                             @csrf
-                            <input type="number" class="input input-sm input-neutral" name="new-saldo">
-                            <button class="btn btn-sm btn-primary">Submit</button>
+                            <label for="new_saldo">Tambah saldo</label>
+                            <div class="flex join">
+                                <input type="number" class="input input-sm join-item" x-model="new_saldo"
+                                    name="new-saldo">
+                                <button class="btn btn-sm btn-primary join-item"
+                                    x-bind:disabled="new_saldo <= 0 && !new_saldo">Submit</button>
+                            </div>
                         </form>
                     </ul>
-                    <ul class="dropdown menu rounded-box bg-base-300 border-2 mt-2" popover id="decreaseFund"
-                        style="position-anchor:--decrease-fund">
-                        <form action="{{ route($routeName . '.update', ['pendanaan' => $pendanaan['id']]) }}"
-                            class="flex gap-2" method="POST">
+                    <button class="btn btn-xs btn-error" popovertarget="cashoutFund" style="anchor-name:--cashout-fund">
+                        Tarik saldo
+                    </button>
+                    <ul class="dropdown menu rounded-box bg-base-300 border-2 mt-2" popover id="cashoutFund"
+                        style="position-anchor:--cashout-fund">
+                        <form action="{{ GeneralHelper::routeAction($routeName, $pendanaan['id'], 'update') }}"
+                            class="flex flex-col   gap-2" method="POST">
                             @method('PUT')
                             @csrf
-                            <input type="number" class="input input-sm input-neutral" name="new-saldo">
-                            <button class="btn btn-sm btn-primary">Submit</button>
+                            <label for="new_saldo">Tarik saldo</label>
+                            <div class="flex join">
+                                <input type="number" class="input input-sm join-item" x-model="new_saldo"
+                                    name="new-saldo">
+                                <button class="btn btn-sm btn-primary join-item"
+                                    x-bind:disabled="new_saldo <= 0 && !new_saldo">Submit</button>
+                            </div>
                         </form>
                     </ul>
                 </div>
@@ -52,6 +65,9 @@
     </div>
 @endif
 
+
+
+{{-- Dynamic page  --}}
 
 @if (!GeneralHelper::Contains($routeName, 'pendanaan'))
     <div class="overflow-x-auto bg-base-300 rounded-xl">
@@ -62,10 +78,19 @@
                     <th>#</th>
                     @foreach ($arrayKeys as $column)
                         @if (in_array($column, $includes))
-                            <th>{{ GeneralHelper::UpperCase($column) }}</th>
+                            @if (GeneralHelper::Contains($column, 'pinjaman_count'))
+                                <th>{{ GeneralHelper::Replace($column, 'pinjaman_count', 'Pinjaman ke X kali') }}</th>
+                            @elseif (GeneralHelper::Contains($column, 'pinjaman_sum_nominal_pinjaman'))
+                                <th>{{ GeneralHelper::Replace($column, 'pinjaman_sum_nominal_pinjaman', 'Jumlah Pinjaman') }}
+                                </th>
+                            @else
+                                <th>{{ GeneralHelper::UpperCase($column) }}</th>
+                            @endif
                         @endif
                     @endforeach
-                    <th>Action</th>
+                    @if (!GeneralHelper::Contains($routeName, 'laporan'))
+                        <th>Action</th>
+                    @endif
                 </tr>
             </thead>
             {{-- Body Table --}}
@@ -79,7 +104,7 @@
                                     @if (!is_array($value))
                                         @if (GeneralHelper::isIsoDateString($value))
                                             <td>{{ GeneralHelper::formatDate($value) }}</td>
-                                        @elseif (is_numeric($value) && $key != 'nik')
+                                        @elseif (is_numeric($value) && $key != 'nik' && $key != 'pinjaman_count')
                                             <td>{{ GeneralHelper::formatRupiah($value) }} </td>
                                         @else
                                             <td>{{ $value }}</td>
@@ -90,7 +115,9 @@
                                         @endphp
                                         @foreach ($arrayKeys as $key)
                                             @if (in_array($key, $includes))
-                                                @if (!GeneralHelper::isIsoDateString($value[$key]))
+                                                @if (is_numeric($value[$key]) && $key === 'jumlah_suku_bunga')
+                                                    <td>{{ $value[$key] }} %</td>
+                                                @else
                                                     <td>{{ GeneralHelper::UpperCase($value[$key]) }}</td>
                                                 @endif
                                             @endif
@@ -98,20 +125,20 @@
                                     @endif
                                 @endif
                             @endforeach
-
-                            <td class="flex items-center gap-2  ">
-                                <a class="btn btn-sm btn-info"
-                                    href="{{ route($routeName . '.edit', [GeneralHelper::SnakeCase($routeName) => $row['id']]) }}"><x-utils.lucide-icon
-                                        iconName="pencil" /> Edit</a>
-                                <form
-                                    action="{{ route($routeName . '.destroy', [GeneralHelper::SnakeCase($routeName) => $row['id']]) }}"
-                                    method="post">
-                                    @method('DELETE')
-                                    @csrf
-                                    <button type="submit" class="btn btn-sm btn-error"><x-utils.lucide-icon
-                                            iconName="trash" />Hapus</button>
-                                </form>
-                            </td>
+                            @if (!GeneralHelper::Contains($routeName, 'laporan'))
+                                <td class="flex items-center gap-2  ">
+                                    <a class="btn btn-sm btn-info"
+                                        href="{{ GeneralHelper::routeAction($routeName, $row['id'], 'edit') }}"><x-utils.lucide-icon
+                                            iconName="pencil" /> Edit</a>
+                                    <form action="{{ GeneralHelper::routeAction($routeName, $row['id'], 'destroy') }}"
+                                        method="post">
+                                        @method('DELETE')
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-error"><x-utils.lucide-icon
+                                                iconName="trash" />Hapus</button>
+                                    </form>
+                                </td>
+                            @endif
                         </tr>
                     @endforeach
                 @else

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Messages;
 use App\Models\Grup;
+use App\Models\HistoriPendanaan;
+use App\Models\Pendanaan;
 use App\Models\Pinjaman as ModelsPinjaman;
 use App\Models\Status;
 use App\Models\SukuBunga;
@@ -45,6 +47,17 @@ class Pinjaman extends Controller
 
             ],
             [
+                'label' => 'Jadwal Pencairan',
+                'name' => 'jadwal_pencairan',
+                'type' => 'datetime-local',
+            ],
+            [
+                'label' => 'Jumlah Pinjaman',
+                'name' => 'jumlah_pinjaman',
+                'type' => 'hidden',
+
+            ],
+            [
                 'label' => 'Status Pinjaman',
                 'name' => 'status_id',
                 'type' => 'select',
@@ -62,13 +75,14 @@ class Pinjaman extends Controller
     {
         $title = $this->title;
         $routeName = Pinjaman::$routeName;
-        $include = ['grup', 'nama_grup', 'nominal_pinjaman', 'jumlah_pinjaman', 'tenor', 'nama_tenor', 'status', 'nama_status', 'suku_bunga', 'jumlah_suku_bunga'];
+        $include = ['grup', 'nama_grup', 'nominal_pinjaman', 'jumlah_pinjaman', 'jadwal_pencairan', 'tenor', 'nama_tenor', 'status', 'nama_status', 'suku_bunga', 'jumlah_suku_bunga'];
         $placeholder = "Cari data pinjaman...";
         $query = request()->query('search');
         $paginate = $this->currentPaginate;
         if ($query) {
             $datas = ModelsPinjaman::where(function ($qr) use ($query) {
                 $qr->where('nominal_pinjaman', 'like', "%{$query}%")
+                    ->orWhereRaw("DATE_FORMAT(jadwal_pencairan, '%Y-%m-%d') LIKE ?", ["%{$query}%"])
                     ->orWhereHas('status', function ($q) use ($query) {
                         $q->where('nama_status', 'like', "%{$query}%");
                     })
@@ -109,27 +123,42 @@ class Pinjaman extends Controller
         $record = $request->validate([
             'nominal_pinjaman' => 'required | numeric | digits_between:1,15',
             'suku_bunga' => 'required',
+            'jadwal_pencairan' => 'required',
             'tenor' => 'required',
             'status_id' => 'required',
             'grup_id' => 'required',
         ]);
 
+        // set uuid
         $record['id'] = (string)Str::uuid();
-
+        // Ambil data nominal, tenor, dan sukubunga
         $nominalPinjaman = intval($record['nominal_pinjaman']);
         $tenor = Tenor::where('id', $record['tenor'])->first()->toArray()['waktu_tenor'];
-        $sukuBunga = intval($record['suku_bunga']);
+        $sukuBunga = SukuBunga::where('id', $record['suku_bunga'])->first()->toArray()['jumlah_suku_bunga'];
+
+        // Cek saldo pendanaan
+        $Pendanaan = Pendanaan::get()->first();
+        $saldoPendanaan = intval($Pendanaan->saldo);
+        if ($nominalPinjaman > $saldoPendanaan) {
+            return redirect()->route(Pinjaman::$routeName . '.index')->with(Messages::$pendanaan['insuficient-fund']);
+        }
+
+        // Kalkulasi Pinjaman + bunga pinjaman
         $tenorPinjaman = intval($tenor) / 12;
         $bungaPinjaman = $sukuBunga / 100;
         $totalBungaPinjaman = $nominalPinjaman * $bungaPinjaman * $tenorPinjaman;
 
         $record['jumlah_pinjaman'] =  $nominalPinjaman + $totalBungaPinjaman;
 
+        // Store data ke table pinjaman
         $storingData = ModelsPinjaman::create($record);
 
         if ($storingData) {
+            // lalu kasi message
             return redirect()->route(Pinjaman::$routeName . '.index')->with(Messages::$collection['store']['success']);
         }
+
+        // Klo gagal kasi message
         return redirect()->back()->with(Messages::$collection['store']['failed']);
     }
 
@@ -146,7 +175,12 @@ class Pinjaman extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $title = "Edit " . $this->title;
+        $routeName = Pinjaman::$routeName;
+        $routeSubmit =  "$routeName.update";
+        $formConfig = $this->formConfig;
+        $datas = ModelsPinjaman::with($this->relation)->find($id);
+        return view('components.admin.crud.edit', compact('title', 'routeName', 'datas', 'formConfig', 'routeSubmit'));
     }
 
     /**
@@ -154,7 +188,27 @@ class Pinjaman extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $record = ModelsPinjaman::findOrFail($id);
+
+        if (!$record) {
+            return redirect()->back()->with(Messages::$collection['update']['notFound']);
+        }
+
+        $datas = $request->validate([
+            'nominal_pinjaman' => 'required | numeric | digits_between:1,15',
+            'suku_bunga' => 'required',
+            'jadwal_pencairan' => 'required',
+            'tenor' => 'required',
+            'status_id' => 'required',
+            'grup_id' => 'required',
+        ]);
+        $updatingData = $record->update($datas);
+
+        if ($updatingData) {
+            return redirect()->route(Pinjaman::$routeName . '.index')->with(Messages::$collection['update']['success']);
+        }
+
+        return redirect()->route(Pinjaman::$routeName . '.index')->with(Messages::$collection['update']['failed']);
     }
 
     /**
@@ -162,6 +216,17 @@ class Pinjaman extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $grup = ModelsPinjaman::findOrFail($id);
+
+        if (!$grup) {
+            return redirect()->back()->with(Messages::$collection['delete']['notFound']);
+        }
+
+        $deletingData = $grup->delete();
+
+        if ($deletingData) {
+            return redirect()->route(Pinjaman::$routeName . '.index')->with(Messages::$collection['delete']['success']);
+        }
+        return redirect()->route(Pinjaman::$routeName . '.index')->with(Messages::$collection['delete']['failed']);
     }
 }

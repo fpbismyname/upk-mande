@@ -1,5 +1,5 @@
 <x-app title="Welcome">
-    <x-ui.navbar-landing />
+    <x-ui.navbar-landing :roleUser="$roleUser" />
     <div class="container mx-auto min-h-screen w-full">
         <x-landing.hero />
         <x-landing.about />

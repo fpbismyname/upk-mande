@@ -50,6 +50,10 @@ class Messages
         'decrease-failed' => [
             'message' => 'Saldo gagal ditarik.',
             'type' => 'error',
+        ],
+        'insuficient-fund' => [
+            'message' => 'Saldo tidak cukup.',
+            'type' => 'error',
         ]
     ];
     public static $collection = [

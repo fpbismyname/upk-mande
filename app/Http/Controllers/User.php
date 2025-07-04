@@ -81,10 +81,10 @@ class User extends Controller
     public function create()
     {
         $title = "Tambah $this->title";
-        $routeSubmit = User::$routeName . ".store";
+        $routeName = User::$routeName;
         $formConfig = $this->formConfig;
 
-        return view('components.admin.crud.add', compact('title', 'formConfig', 'routeSubmit'));
+        return view('components.admin.crud.add', compact('title', 'formConfig', 'routeName'));
     }
 
     /**

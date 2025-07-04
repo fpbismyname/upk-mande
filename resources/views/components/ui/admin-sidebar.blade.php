@@ -70,13 +70,13 @@
             'children' => [
                 [
                     'icon' => 'hand-coins',
-                    'title' => 'Pinjaman',
-                    'route' => '/admin/laporan-pinjaman',
+                    'title' => 'Rekap Pinjaman',
+                    'route' => '/admin/laporan-rekapan-pinjaman',
                 ],
                 [
                     'icon' => 'users',
-                    'title' => 'Data Grup',
-                    'route' => '/admin/laporan-data-grup',
+                    'title' => 'Riwayat Cicilan',
+                    'route' => '/admin/laporan-riwayat-cicilan',
                 ],
             ],
         ],
@@ -176,7 +176,7 @@
         </div>
         <div class="flex flex-col flex-1 overflow-x-hidden bg-base-100 w-full">
             <x-ui.container>
-                <x-ui.navbar-admin title="{{ $title }}" :leftItem="$leftItem" :routeName="$routeName" />
+                <x-ui.navbar-admin title="{{ $title }}" :leftItem="$leftItem" :routeName="$routeName" :listMenu="$ListMenu" />
                 {{ $slot }}
             </x-ui.container>
         </div>

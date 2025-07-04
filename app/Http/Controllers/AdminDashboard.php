@@ -7,14 +7,13 @@ use Illuminate\Http\Request;
 
 class AdminDashboard extends Controller
 {
-    public $exclude = [''];
+    public $routeName = '';
 
     public function index()
     {
         $title = "Dashboard";
-        $exclude = $this->exclude;
         $datas = User::count();
-        $routeName = 'admin';
-        return view('components.admin.dashboard', compact('title', 'exclude', 'datas', 'routeName'));
+        $routeName = $this->routeName;
+        return view('components.admin.dashboard', compact('title', 'datas', 'routeName'));
     }
 }

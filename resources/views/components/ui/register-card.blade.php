@@ -6,7 +6,7 @@
                 <label>Register</label>
             </div>
             <div>
-                <a href="/" class="btn btn-link">Kembali</a>
+                <a href="/" class="btn btn-sm btn-secondary">Kembali</a>
             </div>
         </div>
         <form action="{{ route('register') }}" method="POST" class="flex flex-col w-full gap-2">

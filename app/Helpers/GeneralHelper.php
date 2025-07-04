@@ -30,6 +30,10 @@ class GeneralHelper
     {
         return Str::of($value)->contains($contains);
     }
+    public static function Replace($value, $beforeReplace, $afterReplace)
+    {
+        return Str::of($value)->replace($beforeReplace, $afterReplace)->ucfirst();
+    }
     public static function Equals($value, $contains)
     {
         return $value === $contains;
@@ -53,5 +57,12 @@ class GeneralHelper
     public static function formatRupiah($value)
     {
         return "Rp " . number_format($value, 0, ',', '.');
+    }
+    public static function routeAction($routeName, $id, $action)
+    {
+        if ($action) {
+            return !$routeName ?: route("$routeName.$action", [GeneralHelper::SnakeCase($routeName) => $id]);
+        }
+        return !$routeName ?: route("$routeName.$action");
     }
 }

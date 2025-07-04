@@ -19,6 +19,7 @@
         "vite": "^6.2.4"
     },
     "dependencies": {
+        "autonumeric": "^4.10.8",
         "daisyui": "^5.0.43",
         "lucide": "^0.525.0"
     }

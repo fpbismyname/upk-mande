@@ -131,6 +131,6 @@ return [
 
     'aliases' => [
         'GeneralHelper' => App\Helpers\GeneralHelper::class,
-    ]
-
+        // 'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+    ],
 ];

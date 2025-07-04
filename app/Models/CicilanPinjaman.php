@@ -11,7 +11,8 @@ class CicilanPinjaman extends Model
     protected $primaryKey = 'id';
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $fillable = ['id', 'jumlah_cicilan', 'jatuh_tempo', 'status_id', 'grup_id'];
+    protected $fillable = ['id', 'nominal_cicilan', 'jatuh_tempo', 'status_id', 'grup_id'];
+
 
     public function grup()
     {

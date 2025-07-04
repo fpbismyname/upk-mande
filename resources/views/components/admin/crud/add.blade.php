@@ -1,13 +1,12 @@
 @php
     $title = $title ?? '';
     $form = $formConfig ?? [];
-    $back = route($routeName . '.index');
-    $submit = route($routeName . '.store');
 @endphp
 <x-app title="{{ $title }}">
     <x-ui.admin-sidebar title="{{ $title }}">
         <div class="bg-base-300 p-8 rounded-xl flex flex-col">
-            <form action="{{ $submit }}" method="POST" class="flex flex-col flex-1 gap-4">
+            <form action="{{ GeneralHelper::routeAction($routeName, null, 'store') }}" method="POST"
+                class="flex flex-col flex-1 gap-4">
                 @if ($form)
                     <fieldset class="fieldset w-full rounded-xl gap-4">
                         @csrf
@@ -43,12 +42,28 @@
                                     @enderror
                                 </div>
                             @endif
+                            @if ($col['type'] === 'datetime-local')
+                                <label class="label"
+                                    for="{{ $col['name'] }}">{{ GeneralHelper::UpperCase($col['name']) }}</label>
+                                <input type="{{ $col['type'] }}" name="{{ $col['name'] }}"
+                                    class="input input-sm w-full"
+                                    placeholder="{{ GeneralHelper::UpperCase($col['label']) }}"
+                                    value="{{ old($col['name']) }}" />
+                                @error($col['name'])
+                                    <p class="label text-error">{{ $message }}</p>
+                                @enderror
+                            @endif
+                            @if ($col['type'] === 'hidden')
+                                <input type="{{ $col['type'] }}" name="{{ $col['name'] }}"
+                                    class="input input-sm w-full" value="{{ old($col['name']) }}" />
+                            @endif
                         @endforeach
                     </fieldset>
                 @endif
                 <div class="flex flex-1 gap-2 self-center">
                     <button class="btn btn-sm btn-primary">Submit</button>
-                    <a href="{{ $back }}" class="btn btn-sm btn-secondary">Kembali</a>
+                    <a href="{{ GeneralHelper::routeAction($routeName, null, 'index') }}"
+                        class="btn btn-sm btn-secondary">Kembali</a>
                 </div>
             </form>
         </div>

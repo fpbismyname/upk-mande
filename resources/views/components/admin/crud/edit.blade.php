@@ -1,14 +1,12 @@
 @php
     $title = $title ?? '';
     $form = $formConfig ?? [];
-    $data = isset($datas) ? $datas->toArray() : [];
-    $back = url()->current() === url()->previous() ? route('admin-dashboard') : url()->previous();
 @endphp
 
 <x-app title="{{ $title }}">
     <x-ui.admin-sidebar title="{{ $title }}" :routeName="$routeName">
         <div class="bg-base-300 p-8 rounded-xl flex flex-col">
-            <form action="{{ route($routeSubmit, [GeneralHelper::SnakeCase($routeName) => $data['id']]) }}" method="POST"
+            <form action="{{ GeneralHelper::routeAction($routeName, $datas['id'], 'update') }}" method="POST"
                 class="flex flex-col flex-1 gap-4">
                 @if ($form)
                     <fieldset class="fieldset w-full rounded-xl gap-4">
@@ -33,7 +31,7 @@
                                     <input type="{{ $col['type'] }}" name="{{ $col['name'] }}"
                                         class="input input-sm w-full"
                                         placeholder="{{ GeneralHelper::UpperCase($col['label']) }}"
-                                        value="{{ $data[$col['name']] }}" />
+                                        value="{{ $datas[$col['name']] }}" />
                                     @error($col['name'])
                                         <p class="label">{{ $message }}</p>
                                     @enderror
@@ -52,12 +50,26 @@
                                     <p class="label">{{ $message }}</p>
                                 @enderror
                             @endif
+                            @if ($col['type'] === 'datetime-local')
+                                <input type="{{ $col['type'] }}" name="{{ $col['name'] }}"
+                                    class="input input-sm w-full"
+                                    placeholder="{{ GeneralHelper::UpperCase($col['label']) }}"
+                                    value="{{ old($col['name']) }}" />
+                                @error($col['name'])
+                                    <p class="label text-error">{{ $message }}</p>
+                                @enderror
+                            @endif
+                            @if ($col['type'] === 'hidden')
+                                <input type="{{ $col['type'] }}" name="{{ $col['name'] }}"
+                                    class="input input-sm w-full" value="{{ $datas[$col['name']] }}" />
+                            @endif
                         @endforeach
                     </fieldset>
                 @endif
                 <div class="flex flex-1 gap-2 self-center">
                     <button class="btn btn-sm btn-primary" type="submit">Submit</button>
-                    <a href="{{ $back }}" class="btn btn-sm btn-secondary">Kembali</a>
+                    <a href="{{ GeneralHelper::routeAction($routeName, null, 'index') }}"
+                        class="btn btn-sm btn-secondary">Kembali</a>
                 </div>
             </form>
         </div>

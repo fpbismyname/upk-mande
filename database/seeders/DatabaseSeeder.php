@@ -55,7 +55,7 @@ class DatabaseSeeder extends Seeder
 
         // Status Factory
         Status::factory()->create([
-            'nama_status' => 'dibayar',
+            'nama_status' => 'sudah dibayar',
             'type_status' => 'cicilan_pinjaman',
         ]);
         Status::factory()->create([
@@ -75,11 +75,11 @@ class DatabaseSeeder extends Seeder
             'type_status' => 'pinjaman',
         ]);
         Status::factory()->create([
-            'nama_status' => 'belum_lunas',
+            'nama_status' => 'belum lunas',
             'type_status' => 'pinjaman',
         ]);
         Status::factory()->create([
-            'nama_status' => 'lunas',
+            'nama_status' => 'sudah lunas',
             'type_status' => 'pinjaman',
         ]);
         Status::factory()->create([

@@ -13,7 +13,7 @@ class Pinjaman extends Model
     protected $keyType = 'string';
 
 
-    protected $fillable = ['id', 'nominal_pinjaman', 'tenor', 'suku_bunga', 'status_id', 'grup_id', 'jumlah_pinjaman'];
+    protected $fillable = ['id', 'nominal_pinjaman', 'tenor', 'suku_bunga', 'status_id', 'grup_id', 'jumlah_pinjaman', 'dana_kembali', 'jadwal_pencairan'];
 
     public function grup()
     {
@@ -29,6 +29,6 @@ class Pinjaman extends Model
     }
     public function suku_bunga()
     {
-        return $this->belongsTo(SukuBunga::class, 'jumlah_suku_bunga', 'id');
+        return $this->belongsTo(SukuBunga::class, 'suku_bunga', 'id');
     }
 }
