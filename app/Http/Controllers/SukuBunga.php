@@ -4,35 +4,45 @@ namespace App\Http\Controllers;
 
 use App\Helpers\GeneralHelper;
 use App\Helpers\Messages;
-use App\Models\Pendanaan as ModelsPendanaan;
+use App\Models\SukuBunga as ModelsSukuBunga;
 use Illuminate\Http\Request;
 
-class Pendanaan extends Controller
+class SukuBunga extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-
-    public $title = 'Data Pendanaan';
+    public $title = 'Pengaturan Suku Bunga';
     public $currentPaginate;
-    public static $routeName = 'pendanaan';
+    public static $routeName = 'pengaturan-suku-bunga';
     public $formConfig;
+
     public function __construct()
     {
         $this->currentPaginate = GeneralHelper::$pagination;
+        $this->formConfig = [
+            [
+                'label' => 'Nilai Suku Bunga',
+                'name' => 'jumlah_suku_bunga',
+                'type' => 'number'
+            ],
+        ];
     }
     public function index()
     {
         $title = $this->title;
-        $routeName = Pendanaan::$routeName;
-        $include = ['saldo'];
-        $placeholder = "Cari data anggota...";
+        $routeName  = SukuBunga::$routeName;
+        $include = ['jumlah_suku_bunga'];
+        $placeholder = "Cari data suku_bunga...";
         $query = request()->query('search');
         $paginate = $this->currentPaginate;
-        $datas = ModelsPendanaan::paginate($paginate)->withQueryString();
         if ($query) {
+            $datas = ModelsSukuBunga::where(function ($qr) use ($query) {
+                $qr->where('jumlah_suku_bunga', 'like', "%{$query}%");
+            })->paginate($paginate)->withQueryString();
             return view('components.admin.dashboard', compact('datas', 'title', 'include', 'placeholder', 'routeName'));
         } else {
+            $datas = ModelsSukuBunga::paginate($paginate)->withQueryString();
             return view('components.admin.dashboard', compact('datas', 'title', 'include', 'placeholder', 'routeName'));
         }
     }
@@ -47,19 +57,16 @@ class Pendanaan extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * Alias - Tambah dana
      */
     public function store(Request $request)
     {
         $record = $request->validate([
-            'new-saldo' => 'required | numeric | digits_between:5,15'
+            'jumlah_suku_bunga' => 'required | numeric | digits_between:1,3'
         ]);
-        $pendanaan = ModelsPendanaan::get()->first();
-        $addSaldo = max(0, $pendanaan->saldo + $record['new-saldo']);
-        $pendanaan->saldo = $addSaldo;
-        $updatingSaldo = $pendanaan->save();
-        if (!$updatingSaldo) return redirect()->back()->with(Messages::$pendanaan['add-failed']);
-        return redirect()->back()->with(Messages::$pendanaan['add-success']);
+        $sukuBunga = ModelsSukuBunga::get()->first();
+        $updatingSukuBunga = $sukuBunga->update($record);
+        if (!$updatingSukuBunga) return redirect()->back()->with(Messages::$sukuBunga['success']);
+        return redirect()->back()->with(Messages::$sukuBunga['success']);
     }
 
     /**
@@ -80,23 +87,17 @@ class Pendanaan extends Controller
 
     /**
      * Update the specified resource in storage.
-     * Alias - Kurangi Saldo
      */
     public function update(Request $request, string $id)
     {
-        $record = $request->validate([
-            'new-saldo' => 'required | numeric | digits_between:5,15'
-        ]);
-        $pendanaan = ModelsPendanaan::get()->first();
-        $addSaldo = max(0, $pendanaan->saldo - $record['new-saldo']);
-        $pendanaan->saldo = $addSaldo;
-        $decreasingSaldo = $pendanaan->save();
-        if (!$decreasingSaldo) return redirect()->back()->with(Messages::$pendanaan['decrease-failed']);
-        return redirect()->back()->with(Messages::$pendanaan['decrease-success']);
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id) {}
+    public function destroy(string $id)
+    {
+        //
+    }
 }

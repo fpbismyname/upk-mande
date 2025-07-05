@@ -56,6 +56,16 @@ class Messages
             'type' => 'error',
         ]
     ];
+    public static $sukuBunga = [
+        'success' => [
+            'message' => 'Suku bunga berhasil diubah.',
+            'type' => 'success',
+        ],
+        'failed' => [
+            'message' => 'Terjadi kesalahan pada saat mengubah suku bunga.',
+            'type' => 'success',
+        ]
+    ];
     public static $collection = [
         'store' => [
             'success' => [

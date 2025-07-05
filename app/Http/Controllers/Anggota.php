@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\GeneralHelper;
 use App\Helpers\Messages;
 use App\Models\Anggota as ModelsAnggota;
 use App\Models\Grup;
@@ -15,13 +16,14 @@ class Anggota extends Controller
      */
 
     public $title = 'Data Grup';
-    public $currentPaginate = 10;
+    public $currentPaginate;
     public static $routeName = 'data-anggota-grup';
     public $formConfig;
     public $relation = ['grup'];
 
     public function __construct()
     {
+        $this->currentPaginate = GeneralHelper::$pagination;
         $this->formConfig = [
             [
                 'label' => 'Nomor NIK',

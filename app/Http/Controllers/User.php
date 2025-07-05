@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\GeneralHelper;
 use App\Helpers\Messages;
 use App\Models\RoleUser;
 use App\Models\User as ModelsUser;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -17,12 +17,13 @@ class User extends Controller
      */
 
     public $title = 'Data Akun';
-    public $currentPaginate = 10;
+    public $currentPaginate;
     public static $routeName = 'data-user';
     public $formConfig;
 
     public function __construct()
     {
+        $this->currentPaginate = GeneralHelper::$pagination;
         $this->formConfig = [
             [
                 'label' => 'Nomor NIK',
@@ -56,7 +57,7 @@ class User extends Controller
     {
         $title = $this->title;
         $routeName = User::$routeName;
-        $include = ['nil', 'nama_lengkap', 'email', 'role_user', 'nama_role'];
+        $include = ['nik', 'nama_lengkap', 'email', 'role_user', 'nama_role'];
         $placeholder = "Cari data akun...";
         $query = request()->query('search');
         $paginate = $this->currentPaginate;

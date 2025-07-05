@@ -18,7 +18,7 @@ return new class extends Migration
             $table->decimal('jumlah_pinjaman', 11, 2);
             $table->dateTime('jadwal_pencairan')->nullable();
             $table->boolean('dana_kembali')->default(false);
-            $table->foreignUuid('suku_bunga')->nullable()->constrained('suku_bunga', 'id')->onDelete('set null');
+            $table->decimal('suku_bunga', 5, 2);
             $table->foreignUuid('status_id')->nullable()->constrained('status', 'id')->onDelete('set null');
             $table->foreignUuid('grup_id')->nullable()->constrained('grup', 'id')->onDelete('cascade');
             $table->timestamps();

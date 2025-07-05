@@ -8,11 +8,20 @@ use Illuminate\Support\Str;
 
 class GeneralHelper
 {
-    public static function getAppName(): string
+    public static $pagination = 5;
+    public static function getAppName($type = null): string
     {
         $appName = config("app.name") ?? "";
-        $formattedAppName = Str::of($appName)->replace(["_", "-"], " ")->toString();
-        return ucwords($formattedAppName);
+        $formattedAppName = Str::of($appName)->replace(["_", "-"], " ")->ucfirst()->toString();
+        if ($type === 'welcome') {
+            $description = "Selamat datang di $formattedAppName.";
+            return $description;
+        }
+        if ($type === 'desc') {
+            $description = "Unit Pengelolaan Kegiatan - Kecamatan Mande";
+            return $description;
+        }
+        return $formattedAppName;
     }
     public static function UpperCase($value)
     {
@@ -41,6 +50,10 @@ class GeneralHelper
     public static function formatDate($value)
     {
         return Carbon::parse($value)->format('d/M/y h:i');
+    }
+    public static function formatPersentage($value)
+    {
+        return "$value%";
     }
     public static function isIsoDateString($value)
     {

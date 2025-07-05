@@ -1522,7 +1522,7 @@
 
 </head>
 
-<body>
+<body class="overflow-hidden">
     @if (session('message'))
         <div x-data="{ show: true }" :class="show ? 'toast' : 'opacity-0 hidden'"
             class=" toast-top toast-center z-50 transition: all;" x-init="setTimeout(() => show = false, 3000)">

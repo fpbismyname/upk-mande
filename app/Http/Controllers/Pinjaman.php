@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\GeneralHelper;
 use App\Helpers\Messages;
 use App\Models\Grup;
 use App\Models\HistoriPendanaan;
@@ -20,13 +21,14 @@ class Pinjaman extends Controller
      */
 
     public $title = 'Data Transaksi pinjaman';
-    public $currentPaginate = 10;
+    public $currentPaginate;
     public static $routeName = 'transaksi-pinjaman';
     public $formConfig;
-    public $relation = ['grup', 'status', 'tenor', 'suku_bunga'];
+    public $relation = ['grup', 'status', 'tenor'];
 
     public function __construct()
     {
+        $this->currentPaginate = GeneralHelper::$pagination;
         $this->formConfig = [
             [
                 'label' => 'Nominal Pinjaman',
@@ -43,7 +45,7 @@ class Pinjaman extends Controller
                 'label' => 'Suku Bunga Flat',
                 'name' => 'suku_bunga',
                 'type' => 'select',
-                'option' => SukuBunga::pluck('jumlah_suku_bunga', 'id')
+                'option' => SukuBunga::pluck('jumlah_suku_bunga', 'jumlah_suku_bunga')
 
             ],
             [
@@ -134,7 +136,7 @@ class Pinjaman extends Controller
         // Ambil data nominal, tenor, dan sukubunga
         $nominalPinjaman = intval($record['nominal_pinjaman']);
         $tenor = Tenor::where('id', $record['tenor'])->first()->toArray()['waktu_tenor'];
-        $sukuBunga = SukuBunga::where('id', $record['suku_bunga'])->first()->toArray()['jumlah_suku_bunga'];
+        $sukuBunga = intval($record['suku_bunga']);
 
         // Cek saldo pendanaan
         $Pendanaan = Pendanaan::get()->first();

@@ -1,13 +1,50 @@
-@props(['datas' => [], 'includes' => [], 'routeName' => '#'])
+@props(['datas' => [], 'includes' => [], 'routeName' => 'admin'])
 
-@php
-    if (!$routeName) {
-        return null;
-    }
-    $data = $datas->first() ? $datas->first()->toArray() : [];
-    $arrayKeys = array_keys($data);
 
-@endphp
+{{-- Page Dashboard --}}
+@if (GeneralHelper::Contains($routeName, 'admin'))
+    @php
+        $indicators = $datas;
+    @endphp
+    @php
+        $index = 0;
+    @endphp
+    <div class="flex flex-row">
+        <div class="flex flex-row rounded-xl p-4 bg-base-300 *:text-base-200 flex-1 gap-4">
+            <div class="flex flex-col">
+                <h1 class="font-bold">Hi, {{ auth()->user()->nama_lengkap }}</h1>
+                <span class="my-2">
+                    <p>{{ GeneralHelper::getAppName('welcome') }}</p>
+                    <p>{{ GeneralHelper::getAppName('desc') }}</p>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="flex flex-row gap-4">
+        <div class="flex flex-col flex-1 gap-4">
+            @foreach ($indicators as $key => $value)
+                @if ($index % 3 === 0)
+                    <div class="stats gap-4">
+                @endif
+                <div class="stats bg-primary">
+                    <div class="stat">
+                        <div class="*:text-primary-content">
+                            <div class="stat-title flex gap-2"><x-utils.lucide-icon
+                                    iconName="{{ $value['icon'] }}" />{{ GeneralHelper::UpperCase($key) }}</div>
+                            <div class="stat-value">{{ $value['value'] }}</div>
+                        </div>
+                    </div>
+                </div>
+                @php
+                    $index++;
+                @endphp
+                @if ($index % 3 === 0 || $loop->last)
+        </div>
+@endif
+@endforeach
+</div>
+</div>
+@endif
 
 
 {{-- Page Pendanaan --}}
@@ -32,10 +69,13 @@
                         <form action="{{ GeneralHelper::routeAction($routeName, null, 'store') }}"
                             class="flex flex-col   gap-2" method="POST">
                             @csrf
-                            <label for="new_saldo">Tambah saldo</label>
+                            <label for="new-saldo">Tambah saldo</label>
                             <div class="flex join">
-                                <input type="number" class="input input-sm join-item" x-model="new_saldo"
-                                    name="new-saldo">
+                                <div class="label">
+                                    Rp.
+                                    <input type="number" class="input input-sm join-item" x-model="new_saldo"
+                                        name="new-saldo">
+                                </div>
                                 <button class="btn btn-sm btn-primary join-item"
                                     x-bind:disabled="new_saldo <= 0 && !new_saldo">Submit</button>
                             </div>
@@ -50,10 +90,13 @@
                             class="flex flex-col   gap-2" method="POST">
                             @method('PUT')
                             @csrf
-                            <label for="new_saldo">Tarik saldo</label>
+                            <label for="new-saldo">Tarik saldo</label>
                             <div class="flex join">
-                                <input type="number" class="input input-sm join-item" x-model="new_saldo"
-                                    name="new-saldo">
+                                <div class="label">
+                                    Rp.
+                                    <input type="number" class="input input-sm join-item" x-model="new_saldo"
+                                        name="new-saldo">
+                                </div>
                                 <button class="btn btn-sm btn-primary join-item"
                                     x-bind:disabled="new_saldo <= 0 && !new_saldo">Submit</button>
                             </div>
@@ -65,11 +108,55 @@
     </div>
 @endif
 
+{{-- Suku Bunga --}}
 
+@if (GeneralHelper::Contains($routeName, 'suku-bunga'))
+    @php
+        $sukuBunga = $datas->first()->toArray();
+    @endphp
+    <div class="flex flex-col flex-1">
+        <div class="stats bg-primary">
+            <div class="stat">
+                <div class="*:text-primary-content">
+                    <div class="stat-title">Suku bunga pinjaman</div>
+                    <div class="stat-value">{{ GeneralHelper::formatPersentage($sukuBunga['jumlah_suku_bunga']) }}
+                    </div>
+                </div>
+                <div class="stat-action" x-data="{ new_saldo: 0 }">
+                    <button class="btn btn-xs btn-success" popovertarget="changeInterestRate"
+                        style="anchor-name:--change-interest-rate">
+                        Ubah Suku Bunga
+                    </button>
+                    <ul class="dropdown menu rounded-box bg-base-300 border-2 mt-2" popover id="changeInterestRate"
+                        style="position-anchor:--change-interest-rate">
+                        <form action="{{ GeneralHelper::routeAction($routeName, null, 'store') }}"
+                            class="flex flex-col   gap-2" method="POST">
+                            @csrf
+                            <label for="jumlah_suku_bunga">Ubah Suku Bunga</label>
+                            <div class="flex join">
+                                <div class="label">
+                                    %
+                                    <input type="number" class="input input-sm join-item" x-model="new_saldo"
+                                        name="jumlah_suku_bunga">
+                                </div>
+                                <button class="btn btn-sm btn-primary join-item"
+                                    x-bind:disabled="new_saldo <= 0 && !new_saldo">Submit</button>
+                            </div>
+                        </form>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
 
 {{-- Dynamic page  --}}
 
-@if (!GeneralHelper::Contains($routeName, 'pendanaan'))
+@if (!GeneralHelper::Contains($routeName, ['pendanaan', 'suku-bunga', 'admin', '#']))
+    @php
+        $data = $datas->first()->toArray();
+        $arrayKeys = array_keys($data);
+    @endphp
     <div class="overflow-x-auto bg-base-300 rounded-xl">
         <table class="table">
             {{-- Header table --}}
@@ -104,8 +191,17 @@
                                     @if (!is_array($value))
                                         @if (GeneralHelper::isIsoDateString($value))
                                             <td>{{ GeneralHelper::formatDate($value) }}</td>
-                                        @elseif (is_numeric($value) && $key != 'nik' && $key != 'pinjaman_count')
+                                        @elseif (
+                                            (is_numeric($value) && $key === 'nominal_pinjaman') ||
+                                                $key === 'jumlah_pinjaman' ||
+                                                $key === 'nominal_cicilan' ||
+                                                $key === 'pinjaman_sum_nominal_pinjaman' ||
+                                                $key === 'limit_pinjaman')
                                             <td>{{ GeneralHelper::formatRupiah($value) }} </td>
+                                        @elseif (is_numeric($value) && $key === 'suku_bunga')
+                                            <td>{{ $value }} % </td>
+                                        @elseif (is_numeric($value) && $key === 'pinjaman_count')
+                                            <td>{{ $value }} kali </td>
                                         @else
                                             <td>{{ $value }}</td>
                                         @endif
@@ -115,11 +211,7 @@
                                         @endphp
                                         @foreach ($arrayKeys as $key)
                                             @if (in_array($key, $includes))
-                                                @if (is_numeric($value[$key]) && $key === 'jumlah_suku_bunga')
-                                                    <td>{{ $value[$key] }} %</td>
-                                                @else
-                                                    <td>{{ GeneralHelper::UpperCase($value[$key]) }}</td>
-                                                @endif
+                                                <td>{{ GeneralHelper::UpperCase($value[$key]) }}</td>
                                             @endif
                                         @endforeach
                                     @endif

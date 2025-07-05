@@ -1,4 +1,4 @@
-@props(['title' => 'title-navbar', 'leftItem' => '', 'routeName' => '#', 'listMenu' => []])
+@props(['title' => 'title-navbar', 'leftItem' => '', 'routeName' => 'adminn', 'listMenu' => []])
 
 @php
     $queryUrl = request('search');
@@ -10,7 +10,7 @@
     $currentRoute = GeneralHelper::currentRouteName();
 
     // redirect route for add data
-    $routeAdd = !$routeName ?: route("$routeName.create");
+    $routeAdd = $routeName === 'admin' ? '#' : route("$routeName.create");
 
 @endphp
 
@@ -125,7 +125,7 @@
     </div>
 </div>
 
-@if (!GeneralHelper::Contains($routeName, ['pendanaan', 'laporan']))
+@if (!GeneralHelper::Contains($routeName, ['pendanaan', 'laporan', 'suku-bunga', 'admin']))
     @if (!$onAddPage && !$onEditPage && !$isDashboard)
         <div class="flex p-4 rounded-xl items-center bg-base-300 justify-between w-full flex-col sm:flex-row gap-4">
             @if (!$onAddPage && !$onEditPage && !$isDashboard)

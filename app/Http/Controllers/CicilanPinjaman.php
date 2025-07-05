@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\GeneralHelper;
 use App\Helpers\Messages;
 use App\Models\CicilanPinjaman as ModelsCicilanPinjaman;
 use App\Models\Grup;
@@ -16,13 +17,14 @@ class CicilanPinjaman extends Controller
      */
 
     public $title = 'Data Transaksi Cicilan Pinjaman';
-    public $currentPaginate = 10;
+    public $currentPaginate;
     public static $routeName = 'transaksi-cicilan-pinjaman';
     public $formConfig;
     public $relation = ['grup', 'status'];
 
     public function __construct()
     {
+        $this->currentPaginate = GeneralHelper::$pagination;
         $this->formConfig = [
             [
                 'label' => 'Nominal Cicilan',

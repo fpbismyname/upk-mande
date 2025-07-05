@@ -21,16 +21,16 @@ class RiwayatCicilan implements FromView
     {
         $query = $this->search;
         if ($query) {
-            $datas = CicilanPinjaman::select('*')
-                ->selectRaw(
-                    "
+            $datas = CicilanPinjaman::join('status', 'cicilan_pinjaman.status_id', '=', 'status.id')
+                ->select('cicilan_pinjaman.*') // hanya ambil kolom dari cicilan_pinjaman
+                ->selectRaw("
         CASE
-            WHEN DATEDIFF(CURDATE(), jatuh_tempo) > 0 THEN CONCAT(DATEDIFF(CURDATE(), jatuh_tempo), ' hari')
+            WHEN status.nama_status = 'sudah_dibayar' THEN '-'
+            WHEN CURDATE() < jatuh_tempo THEN '-'
+            WHEN CURDATE() > jatuh_tempo AND status.nama_status = 'belum_dibayar' THEN CONCAT(DATEDIFF(CURDATE(), jatuh_tempo), ' hari')
             ELSE 'Tidak telat'
-        END as telat_bayar
-    ",
-                )
-                ->where(function ($qr) use ($query) {
+        END AS telat_bayar
+    ")->where(function ($qr) use ($query) {
                     $qr->where('nominal_cicilan', 'like', "%{$query}%")
                         ->orWhere('jatuh_tempo', 'like', "%{$query}%")
                         ->orWhereHas('status', function ($q) use ($query) {
@@ -44,15 +44,16 @@ class RiwayatCicilan implements FromView
                 ->get();
             return view('components.admin.print.laporan-riwayat-cicilan', compact('datas'));
         } else {
-            $datas = $datas = CicilanPinjaman::select('*')
-                ->selectRaw(
-                    "
+            $datas = $datas = CicilanPinjaman::join('status', 'cicilan_pinjaman.status_id', '=', 'status.id')
+                ->select('cicilan_pinjaman.*') // hanya ambil kolom dari cicilan_pinjaman
+                ->selectRaw("
         CASE
-            WHEN DATEDIFF(CURDATE(), jatuh_tempo) > 0 THEN CONCAT(DATEDIFF(CURDATE(), jatuh_tempo), ' hari')
+            WHEN status.nama_status = 'sudah_dibayar' THEN '-'
+            WHEN CURDATE() < jatuh_tempo THEN '-'
+            WHEN CURDATE() > jatuh_tempo AND status.nama_status = 'belum_dibayar' THEN CONCAT(DATEDIFF(CURDATE(), jatuh_tempo), ' hari')
             ELSE 'Tidak telat'
-        END as telat_bayar
-    ",
-                )
+        END AS telat_bayar
+    ")
                 ->get();
             return view('components.admin.print.laporan-riwayat-cicilan', compact('datas'));
         }

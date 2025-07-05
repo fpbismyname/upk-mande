@@ -80,6 +80,28 @@
                 ],
             ],
         ],
+        [
+            'title' => 'Lainnya',
+            'type' => 'divider',
+        ],
+        [
+            'title' => 'Pengaturan',
+            'icon' => 'settings',
+            'route' => 'pengaturan',
+            'type' => 'dropdown',
+            'children' => [
+                [
+                    'icon' => 'tag',
+                    'title' => 'Nama Status',
+                    'route' => '/admin/pengaturan-nama-status',
+                ],
+                [
+                    'icon' => 'badge-percent',
+                    'title' => 'Suku Bunga',
+                    'route' => '/admin/pengaturan-suku-bunga',
+                ],
+            ],
+        ],
     ];
     $currentRoute = GeneralHelper::currentRouteName();
 @endphp
@@ -135,9 +157,10 @@
                                             @php
                                                 // Check Current Active Dropdown Item
                                                 $activeMenuItem = GeneralHelper::Equals($currentRoute, $item['route']);
+                                                $routing = $activeMenuItem ? '#' : $item['route'];
                                             @endphp
                                             <a class="flex gap-2 items-center rounded-xl cursor-pointer transition-all my-2 w-full {{ $activeMenuItem ? 'bg-base-300' : 'hover:bg-base-300' }} p-2 {{ $activeMenuItem ? 'font-bold' : '' }}"
-                                                href="{{ $item['route'] }}">
+                                                href="{{ $routing }}">
                                                 <x-utils.lucide-icon iconName="{{ $item['icon'] }}" />
                                                 {{ GeneralHelper::UpperCase($item['title']) }}
                                             </a>

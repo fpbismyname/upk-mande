@@ -15,7 +15,7 @@ class Status extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
-    protected $fillable = ['id', 'status_id', 'type_status'];
+    protected $fillable = ['id', 'nama_status', 'type_status'];
 
     protected function pinjaman()
     {

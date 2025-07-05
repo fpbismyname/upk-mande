@@ -2,7 +2,7 @@
     $data = $datas;
     $includes = $include ?? [];
     $currentRoute = GeneralHelper::currentRouteName('name');
-    $placeholder = isset($placeholder) === true && !$data->isEmpty() ? $placeholder : '';
+    $placeholder = isset($placeholder) === true ? $placeholder : '';
 @endphp
 
 <x-app title="{{ $title }}">

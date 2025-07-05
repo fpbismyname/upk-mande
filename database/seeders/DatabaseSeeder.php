@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
             'nama_role' => 'kepala-institusi'
         ]);
         RoleUser::factory()->create([
-            'nama_role' => 'keuangan'
+            'nama_role' => 'divisi-keuangan'
         ]);
         RoleUser::factory()->create([
             'nama_role' => 'divisi-pendanaan'
@@ -47,23 +47,45 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('admin123')
         ]);
         User::factory()->create([
-            'nama_lengkap' => 'Bunda Nisa',
+            'nama_lengkap' => 'Nisa',
             'role_id' => RoleUser::where('nama_role', 'nasabah')->first()->id,
             'email' => 'Nisa@gmail.com',
             'password' => Hash::make('nisa123')
         ]);
+        User::factory()->create([
+            'nama_lengkap' => 'kepalaInstitusi',
+            'role_id' => RoleUser::where('nama_role', 'kepala-institusi')->first()->id,
+            'email' => 'kepalaInstitusi@gmail.com',
+            'password' => Hash::make('kepala123')
+        ]);
+        User::factory()->create([
+            'nama_lengkap' => 'akunKeuangan',
+            'role_id' => RoleUser::where('nama_role', 'divisi-keuangan')->first()->id,
+            'email' => 'akunKeuangan@gmail.com',
+            'password' => Hash::make('keuangan123')
+        ]);
+        User::factory()->create([
+            'nama_lengkap' => 'akunPendanaan',
+            'role_id' => RoleUser::where('nama_role', 'divisi-pendanaan')->first()->id,
+            'email' => 'akunPendanaan@gmail.com',
+            'password' => Hash::make('pendanaan123')
+        ]);
 
         // Status Factory
         Status::factory()->create([
-            'nama_status' => 'sudah dibayar',
+            'nama_status' => 'sudah_dibayar',
             'type_status' => 'cicilan_pinjaman',
         ]);
         Status::factory()->create([
-            'nama_status' => 'belum dibayar',
+            'nama_status' => 'belum_dibayar',
             'type_status' => 'cicilan_pinjaman',
         ]);
         Status::factory()->create([
             'nama_status' => 'diproses',
+            'type_status' => 'pinjaman',
+        ]);
+        Status::factory()->create([
+            'nama_status' => 'disetujui',
             'type_status' => 'pinjaman',
         ]);
         Status::factory()->create([
@@ -75,11 +97,11 @@ class DatabaseSeeder extends Seeder
             'type_status' => 'pinjaman',
         ]);
         Status::factory()->create([
-            'nama_status' => 'belum lunas',
+            'nama_status' => 'belum_lunas',
             'type_status' => 'pinjaman',
         ]);
         Status::factory()->create([
-            'nama_status' => 'sudah lunas',
+            'nama_status' => 'sudah_lunas',
             'type_status' => 'pinjaman',
         ]);
         Status::factory()->create([

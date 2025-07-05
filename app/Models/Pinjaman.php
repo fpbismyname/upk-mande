@@ -27,8 +27,4 @@ class Pinjaman extends Model
     {
         return $this->belongsTo(Tenor::class, 'tenor', 'id');
     }
-    public function suku_bunga()
-    {
-        return $this->belongsTo(SukuBunga::class, 'suku_bunga', 'id');
-    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\GeneralHelper;
 use App\Models\Grup;
 use App\Models\Pinjaman;
 use Illuminate\Http\Request;
@@ -12,10 +13,14 @@ class LaporanPinjaman extends Controller
      * Display a listing of the resource.
      */
     public $title = 'Data Rekapan Pinjaman';
-    public $currentPaginate = 10;
+    public $currentPaginate;
     public static $routeName = 'laporan-rekapan-pinjaman';
     public $relation = ['status', 'users'];
     public $relationCount = ['pinjaman'];
+    public function __construct()
+    {
+        $this->currentPaginate = GeneralHelper::$pagination;
+    }
     public function index()
     {
         $title = $this->title;
